@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Miembro</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<div class="main">
+
+<header>
+    <h3>Indice</h3>
+    <nav>
+        <a href="registro.html">Registrar miembro</a>
+        <a href="actividades.html">Registrar actividad</a>
+        <a href="lista.html">Ver miembros</a>
+        <a href="estadisticas.html">Estadísticas</a>
+    </nav>
+</header>
+
+<hr>
+<br>
+
+<!-- Javascript rellena este div dinamicamente-->
+<div id="errors" class="error-container"></div>
+
+    <h1>Registro de actividad</h1>
+    <p>Por favor llenar el formulario a continuación con la información de la actividad:</p>
+
+    <form id="form-actividad">
+        <div class="form-row">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input id="nombre" placeholder="Desarrollo web">
+        </div>
+        
+        <div class="form-row">
+            <b>Horas:</b>
+            <!-- usar text para que  no salgan esas flechas para aumentar y disminuir numero-->
+            <label for="horas-lunes" class="small-label">L:</label>
+            <input id="horas-lunes" type="text" class="small-input" placeholder="0">
+
+            <label for="horas-martes" class="small-label">M:</label>
+            <input id="horas-martes" type="text" class="small-input"  placeholder="0">
+
+            <label for="horas-miercoles" class="small-label">Mi:</label>
+            <input id="horas-miercoles" type="text" class="small-input"  placeholder="0">
+
+            <label for="horas-jueves" class="small-label">J:</label>
+            <input id="horas-jueves" type="text" class="small-input"  placeholder="0">
+
+            <label for="horas-viernes" class="small-label">V:</label>
+            <input id="horas-viernes" type="text" class="small-input"  placeholder="0">
+
+            <label for="horas-sabado" class="small-label">S:</label>
+            <input id="horas-sabado" type="text" class="small-input"  placeholder="0">
+
+            <label for="horas-domingo" class="small-label">D:</label>
+            <input id="horas-domingo" type="text" class="small-input"  placeholder="0">
+        </div>
+        <div class="form-row">
+            <label for="archivos" class="form-label">Archivos:</label>
+            <input id="archivos" type="file" multiple accept="image/*,video/*">
+        </div>
+
+        <div class="form-row">
+            <label for="link" class="form-label">Link:</label>
+            <input id="link" type="url" placeholder="https://www.misitio.com">
+        </div>
+        
+        <button type="submit">Agregar</button>
+    </form>
+
+</div>
+
+<script src="./js/errors.js"></script>
+<script src="./js/validators.js"></script>
+<script>
+    const form = document.getElementById("form-actividad");
+    const nombre = document.getElementById("nombre");
+    const horas = [
+        document.getElementById("horas-lunes"),
+        document.getElementById("horas-martes"),
+        document.getElementById("horas-miercoles"),
+        document.getElementById("horas-jueves"),
+        document.getElementById("horas-viernes"),
+        document.getElementById("horas-sabado"),
+        document.getElementById("horas-domingo")
+    ];
+    const archivos = document.getElementById("archivos");
+    const link = document.getElementById("link");
+
+    const errorDiv = document.getElementById("errors")
+
+    form.addEventListener("submit", (event) => {
+          
+
+    });
+</script>
+
+</html> 
+

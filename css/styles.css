@@ -17,6 +17,17 @@
     margin-bottom: 10px;
 }
 
-.form-row label {
-    width: 120px;   /* fija columna izquierda */
+.form-label {
+    width: 120px;
+}
+
+
+
+.small-input {
+    width: 40px; 
+}
+
+.small-label {
+    margin-right: 2px;
+    margin-left: 6px;
 }
