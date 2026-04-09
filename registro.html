@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Miembro</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<header>
+    <h3>Indice</h3>
+    <nav>
+        <a href="registro.html">Registrar miembro</a>
+        <a href="actividades.html">Registrar actividad</a>
+        <a href="lista.html">Ver miembros</a>
+        <a href="estadisticas.html">Estadísticas</a>
+    </nav>
+</header>
+
+<hr>
+<br>
+
+<!-- Javascript rellena este div dinamicamente-->
+<div id="errors" class="error-container"></div>
+
+<h1>Registro de miembro</h1>
+<p>Por favor llenar el formulario a continuación con la información del miembro:</p>
+
+<form id="form-registro">
+    <input id="nombre" placeholder="Nombre" type="text">
+    <input id="apellido" placeholder="Apellido" type="text">
+    <input id="email" placeholder="Email" type="email">
+    <input id="fono" placeholder="+XX XXXX XXXX" type="text">
+
+    <select id="tipo">
+        <option value="">Seleccione</option>
+        <option value="estudiante_pre">Pre-grado</option>
+        <option value="estudiante_post">Post-grado</option>
+        <option value="funcionario">Funcionario</option>
+        <option value="academico">Académico</option>
+    </select>
+
+
+    <button type="submit">Registrar</button>
+</form>
+
+<script src="./js/errors.js"></script>
+<script src="./js/validators.js"></script>
+<script>
+    const form = document.getElementById("form-registro");
+    const nombre = document.getElementById("nombre");
+    const apellido= document.getElementById("apellido");
+    const email = document.getElementById("email");
+    const tipo = document.getElementById("tipo");
+    const fono = document.getElementById("fono");
+
+    const errorDiv = document.getElementById("errors")
+
+    form.addEventListener("submit", (event) => {
+        cleanErrors(errorDiv)
+        event.preventDefault();
+
+        let validName = validateName(nombre.value, 3)
+        let validApellido =validateName(apellido.value, 3)
+        let validEmail = validateEmail(email.value)
+        let validPhone = validatePhone(fono.value)
+        let validType = tipo.value != ""
+        
+        if(validName && validApellido && validEmail && validPhone && validType){
+            // registrar usuario
+            alert("Miembro registrado correctamente")
+            form.reset();
+        }else{
+            let head = "Errores en el formulario:"
+
+            let values =[
+                [validName, "Nombre inválido (mínimo 3 caracteres)"],
+                [validApellido, "Apellido inválido (mínimo 3 caracteres)"],
+                [validEmail, "Email inválido"],
+                [validPhone, "Teléfono inválido (formato +XX XXXX XXXX) (entre 7 y 14 digitos)"],
+                [validType, "Debe seleccionar el tipo de miembro"]]
+            // filter out valid inputs
+            console.log(values)
+            let filtered_values = values.filter(val => val[0]==false).map(val=>val[1])
+
+            displayErrors(head, filtered_values, errorDiv)
+        }       
+
+    });
+</script>
+
+</html> 
+
