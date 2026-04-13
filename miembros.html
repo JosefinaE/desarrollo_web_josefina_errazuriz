@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de miembros</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<div class="main">
+
+<header>
+    <h3>Indice</h3>
+    <nav>
+        <a href="registro.html">Registrar miembro</a>
+        <a href="actividades.html">Registrar actividad</a>
+        <a href="miembros.html">Ver miembros</a>
+        <a href="estadisticas.html">Estadísticas</a>
+    </nav>
+</header>
+
+<hr>
+<br>
+
+<!-- Javascript rellena este div dinamicamente-->
+<div id="errors" class="error-container"></div>
+
+    <h1>Listado de miembros</h1>
+    <p>Puede usar los filtros y botones de navegación para explorar los datos:</p>
+
+    <div class="form-row">
+        <label for="filtro-tipo">Filtrar por tipo:</label>
+        <select id="filtro-tipo">
+            <option value="">Todos</option>
+            <option value="estudiante_pre">Pre-grado</option>
+            <option value="estudiante_post">Post-grado</option>
+            <option value="funcionario">Funcionario</option>
+            <option value="academico">Académico</option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="orden">Ordenar por:</label>
+        <select id="orden">
+            <option value="nombre">Nombre</option>
+            <option value="email">Email</option>
+            <option value="fono">Telefono</option>
+        </select>
+    </div>
+
+    <h3>Listado: </h3>
+    
+    <ul id="lista-miembros">
+        <li>Ana Pérez — ana@mail.com (Pre-grado)</li>
+        <li>Luis Soto — luis@mail.com (Académico)</li>
+        <li>María Rojas — maria@mail.com (Funcionario)</li>
+    </ul>
+
+    <button id="prev">Anterior</button>
+    <span id="pagina"></span>
+    <button id="next">Siguiente</button>
+
+</div>
+
+</html> 
+
