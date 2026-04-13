@@ -18,3 +18,37 @@ function validatePhone(phoneNumber){
     const input = String(phoneNumber).replace(whitespaceRegex,'')
     return phoneRegex.test(input)
 }
+
+// validates a week of hours
+function validateHoursArray(horas) {
+    for (let i = 0; i < horas.length; i++) {
+            const val = horas[i].trim();
+            if (val !== "") {
+                const num = Number(val);
+                if (isNaN(num) || num < 0 || num > 24) {
+                    return false;
+                }
+            }
+        }
+    return true;
+}
+
+function validateFiles(files) {
+    if (!files || files.length === 0) return false;
+    for (let i = 0; i < files.length; i++) {
+        const type = file[i].type;
+        if (!type.startsWith("image/") && !type.startsWith("video/")) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function validateURL(url) {
+    try {
+        new URL(url);
+        return true;
+    } catch {
+        return false;
+    }
+}

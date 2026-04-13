@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Registrar Miembro</title>
+    <title>Registrar Actividad</title>
     <link rel="stylesheet" href="./css/styles.css">
 </head>
 
@@ -14,7 +14,7 @@
     <nav>
         <a href="registro.html">Registrar miembro</a>
         <a href="actividades.html">Registrar actividad</a>
-        <a href="lista.html">Ver miembros</a>
+        <a href="miembros.html">Ver miembros</a>
         <a href="estadisticas.html">Estadísticas</a>
     </nav>
 </header>
@@ -29,11 +29,8 @@
     <p>Por favor llenar el formulario a continuación con la información de la actividad:</p>
 
     <form id="form-actividad">
-        <div class="form-row">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input id="nombre" placeholder="Desarrollo web">
-        </div>
-        
+        <!-- Los datos como nombre y contacto se obtienen desde la info del miembro que ingresa
+         el formulario -->
         <div class="form-row">
             <b>Horas:</b>
             <!-- usar text para que  no salgan esas flechas para aumentar y disminuir numero-->
@@ -77,7 +74,6 @@
 <script src="./js/validators.js"></script>
 <script>
     const form = document.getElementById("form-actividad");
-    const nombre = document.getElementById("nombre");
     const horas = [
         document.getElementById("horas-lunes"),
         document.getElementById("horas-martes"),
@@ -93,8 +89,30 @@
     const errorDiv = document.getElementById("errors")
 
     form.addEventListener("submit", (event) => {
-          
+        cleanErrors(errorDiv)
+        event.preventDefault();
 
+        let validHours = validateHoursArray(horas.map(x=>x.value))
+        let validFiles = validateFiles(archivos.files) // filelist
+        let validLink = validateURL(link.value)
+        
+
+        if(validHours && validFiles && validLink){
+            alert("Actividad registrada correctamente")
+            form.reset();
+        }else{
+            let head = "Errores en el formulario:"
+
+            let values =[
+                [validHours, "Ingreso de horas invalidos, verifique que sean numeros en el rango 0-24"],
+                [validFiles, "Archivo invalido"],
+                [validLink, "Link invalido"]]
+            // filter out valid inputs
+            console.log(values)
+            let filtered_values = values.filter(val => val[0]==false).map(val=>val[1])
+
+            displayErrors(head, filtered_values, errorDiv)
+        }       
     });
 </script>
 
