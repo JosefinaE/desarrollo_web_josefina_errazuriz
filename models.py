@@ -1,9 +1,13 @@
 from datetime import datetime
-from enum import Enum
 from typing import List, Optional
 
-from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy import DateTime, ForeignKey, String, Text, Enum
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+
+
+DIAS = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
+TIPOS = ("arte", "deporte", "tecnología", "social", "recreación", "otra")
+ 
 
 
 class Base(DeclarativeBase):
@@ -23,8 +27,9 @@ class Comuna(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     nombre: Mapped[str] = mapped_column(String(200), nullable=False)
     region_id: Mapped[int] = mapped_column(ForeignKey("region.id"), nullable=False)
-    region: Mapped["Region"] = relationship(back_populates="comunas")
 
+    region: Mapped["Region"] = relationship(back_populates="comunas")
+    miembros: Mapped[List["Miembro"]] = relationship(back_populates="comuna")
 
 class Miembro(Base):
     __tablename__ = "miembro"
@@ -42,9 +47,6 @@ class Miembro(Base):
 
 class Actividad(Base):
     __tablename__ = "actividad"
-
-    DIAS = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
-    TIPOS = ["arte", "deporte", "tecnología", "social", "recreación", "otra"]
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     nombre: Mapped[str] = mapped_column(String(45), nullable=False)
