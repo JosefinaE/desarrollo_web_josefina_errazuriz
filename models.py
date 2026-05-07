@@ -1,0 +1,78 @@
+from datetime import datetime
+from enum import Enum
+from typing import List, Optional
+
+from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+class Region(Base):
+    __tablename__ = "region"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(200), nullable=False)
+    comunas: Mapped[List["Comuna"]] = relationship(back_populates="region")
+
+
+class Comuna(Base):
+    __tablename__ = "comuna"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(200), nullable=False)
+    region_id: Mapped[int] = mapped_column(ForeignKey("region.id"), nullable=False)
+    region: Mapped["Region"] = relationship(back_populates="comunas")
+
+
+class Miembro(Base):
+    __tablename__ = "miembro"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(255), nullable=False)
+    email: Mapped[str] = mapped_column(String(80), nullable=False)
+    telefono: Mapped[str] = mapped_column(String(15), nullable=False)
+    fecha_registro: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    comuna_id: Mapped[int] = mapped_column(ForeignKey("comuna.id"), nullable=False)
+
+    comuna: Mapped["Comuna"] = relationship(back_populates="miembros")
+    actividades: Mapped[List["Actividad"]] = relationship(back_populates="miembro")
+
+
+class Actividad(Base):
+    __tablename__ = "actividad"
+
+    DIAS = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+    TIPOS = ["arte", "deporte", "tecnología", "social", "recreación", "otra"]
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(45), nullable=False)
+
+    dia: Mapped[str] = mapped_column(Enum(*DIAS), nullable=False)
+    hora_inicio: Mapped[str] = mapped_column(String(5), nullable=False)
+    duracion: Mapped[str] = mapped_column(String(5), nullable=False)
+    tipo: Mapped[str] = mapped_column(Enum(*TIPOS), nullable=False)
+    descripcion: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    miembro_id: Mapped[int] = mapped_column(ForeignKey("miembro.id"), nullable=False)
+
+    miembro: Mapped["Miembro"] = relationship(back_populates="actividades")
+    fotos: Mapped[List["Foto"]] = relationship(
+        back_populates="actividad", cascade="all, delete-orphan"
+    )
+
+    def __repr__(self) -> str:
+        return f"<Actividad {self.nombre} ({self.dia})>"
+
+
+class Foto(Base):
+    __tablename__ = "foto"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    ruta_archivo: Mapped[str] = mapped_column(String(300), nullable=False)
+    nombre_archivo: Mapped[str] = mapped_column(String(300), nullable=False)
+    actividad_id: Mapped[int] = mapped_column(
+        ForeignKey("actividad.id"), nullable=False
+    )
+
+    actividad: Mapped["Actividad"] = relationship(back_populates="fotos")
