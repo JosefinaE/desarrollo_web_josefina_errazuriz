@@ -9,7 +9,7 @@
 <header>
     <h1>Indice</h1>
     <nav>
-        <a href="registro.html">Registrar miembro</a>
+        <a href="{{url_for('registrar_miembro')}}">Registrar miembro</a>
         <a href="actividades.html">Registrar actividad</a>
         <a href="miembros.html">Ver miembros</a>
         <a href="estadisticas.html">Estadísticas</a>
@@ -17,6 +17,7 @@
 </header>
 
 <br>
+<div id="errors" class="error-container"></div>
 <hr>
 {% block content %}
 {% endblock %}
