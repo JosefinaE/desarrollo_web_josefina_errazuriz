@@ -1,19 +1,10 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
+{% block content %}
 
-<head>
-    <title>Miembros DCC</title>
-</head>
+{% for m in miembros %}
 
+{{ m.nombre }}
 
-<header>
-    <h1>Indice</h1>
-    <nav>
-        <a href="registro.html">Registrar miembro</a>
-        <a href="actividades.html">Registrar actividad</a>
-        <a href="miembros.html">Ver miembros</a>
-        <a href="estadisticas.html">Estadísticas</a>
-    </nav>
-</header>
+{% endfor %}
 
-</html> 
+{% endblock %}
