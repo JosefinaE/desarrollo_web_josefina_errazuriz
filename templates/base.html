@@ -3,6 +3,7 @@
 
 <head>
     <title>{{title}}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
 
@@ -19,6 +20,16 @@
 <br>
 <div id="errors" class="error-container"></div>
 <hr>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 {% block content %}
 {% endblock %}
 </html> 

@@ -13,11 +13,6 @@
     </div>
 
     <div class="form-row">
-        <label for="apellido" class="form-label">Apellido:</label>
-        <input id="apellido" name="apellido" type="text" placeholder="Fulanito">
-    </div>
-
-    <div class="form-row">
         <label for="email" class="form-label">Email:</label>
         <input id="email" name="email" type="email" placeholder="micorreo@dcc.cl">
     </div>
@@ -27,14 +22,41 @@
         <input id="fono" name="fono" type="text" placeholder="+XX XXXX XXXX">
     </div>
     
-    <div class="form-row">
-        <label for="tipo" class="form-label">Tipo:</label>
+    <div class="form-row"  id="select_comuna">
+        <label for="id_comuna" class="form-label">Comuna:</label>
+        <select id="id_comuna" name="id_comuna">
+            <option value="">Seleccione</option>
+            {% for c in comunas %}
+            <option value="{{c.id}}">{{c.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-row" onchange="hideDeptoSelect()" id="select_tipo">
+        <label for="tipo" class="form-label">Departamento:</label>
         <select id="tipo" name="tipo">
             <option value="">Seleccione</option>
             <option value="estudiante_pre">Pre-grado</option>
             <option value="estudiante_post">Post-grado</option>
             <option value="funcionario">Funcionario</option>
             <option value="academico">Académico</option>
+        </select>
+    </div>
+
+    <div class="form-row" id="select_depto">
+        <label for="depto" class="form-label">Tipo:</label>
+        <select id="depto" name="depto">
+            <option value="">Seleccione</option>
+            <option value="DCC">DCC</option>
+            <option value="DIM">DIM</option>
+            <option value="DFI">DFI</option>
+            <option value="DIE">DIE</option>
+            <option value="DII">DII</option>
+            <option value="Geologia">Geología</option>
+            <option value="Astronomia">Astronomía</option>
+            <option value="Ing. en Minas">Ing. en Minas</option>
+            <option value="Ing. Mecanica">Ing. Mecánica</option>
+            <option value="Ing. Civil">Ing. Civil</option>
         </select>
     </div>
 
@@ -49,36 +71,60 @@
 <script>
     const form = document.getElementById("form-registro");
     const nombre = document.getElementById("nombre");
-    const apellido= document.getElementById("apellido");
     const email = document.getElementById("email");
     const tipo = document.getElementById("tipo");
+    const depto = document.getElementById("depto");
     const fono = document.getElementById("fono");
+    const id_comuna = document.getElementById("id_comuna");
 
-    const errorDiv = document.getElementById("errors")
+    const errorDiv = document.getElementById("errors") 
+    const deptoSelect = document.getElementById("select_depto")
+    const tipoSelect = document.getElementById("select_tipo");
+    
+    function hideDeptoSelect(){
+        console.log(tipo.value)
+        if(tipo.value=="funcionario"){
+            deptoSelect.style.display = "none";
+            depto.value = ""
+        }else{
+            deptoSelect.style.display = "flex";
+        }
+    }
+
+
 
     form.addEventListener("submit", (event) => {
         cleanErrors(errorDiv)
         event.preventDefault();
 
         let validName = validateName(nombre.value, 3)
-        let validApellido =validateName(apellido.value, 3)
         let validEmail = validateEmail(email.value)
         let validPhone = validatePhone(fono.value)
         let validType = tipo.value != ""
-        
-        if(validName && validApellido && validEmail && validPhone && validType){
+        let validDepto = false;
+        let validComuna = id_comuna.value != ""
+        if(tipo.value == "funcionario"){
+            validDepto = depto.value == ""
+        }else{
+            validDepto = depto.value != ""
+        }
+
+
+        let validForm = validName && validEmail && validPhone && validType && validDepto && validComuna
+        if(true){
             // registrar usuario
-            alert("Miembro registrado correctamente")
             form.submit();
         }else{
             let head = "Errores en el formulario:"
 
             let values =[
                 [validName, "Nombre inválido (mínimo 3 caracteres)"],
-                [validApellido, "Apellido inválido (mínimo 3 caracteres)"],
                 [validEmail, "Email inválido"],
                 [validPhone, "Teléfono inválido (formato +XX XXXX XXXX) (entre 7 y 14 digitos)"],
-                [validType, "Debe seleccionar el tipo de miembro"]]
+                [validType, "Debe seleccionar el tipo de miembro"],
+                [validDepto, "Debe seleccionar un deptartamento"],
+                [validComuna, "Debe seleccionar una comuna"],
+            ]
             // filter out valid inputs
             console.log(values)
             let filtered_values = values.filter(val => val[0]==false).map(val=>val[1])

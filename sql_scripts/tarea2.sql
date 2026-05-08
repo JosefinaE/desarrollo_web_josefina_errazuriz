@@ -55,6 +55,9 @@ CREATE TABLE IF NOT EXISTS `tarea2`.`miembro` (
   `telefono` VARCHAR(15) NOT NULL,
   `fecha_registro` DATETIME NOT NULL,
   `comuna_id` INT NOT NULL,
+  `tipo` ENUM('estudiante_pre', 'estudiante_post', 'funcionario', 'academico') NOT NULL,
+  `departamento` ENUM('DCC', 'DIM', 'DFI', 'DIE', 'DII', 'Ing. en Minas', 'Ing. Mecanica', 'Ing. Civil','Geologia','Astronomia') NULL,
+
   PRIMARY KEY (`id`),
   INDEX `fk_miembro_comuna1_idx` (`comuna_id` ASC),
   CONSTRAINT `fk_miembro_comuna1`

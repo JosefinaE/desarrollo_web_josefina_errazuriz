@@ -1,13 +1,25 @@
 from datetime import datetime
 from typing import List, Optional
 
-from sqlalchemy import DateTime, ForeignKey, String, Text, Enum
+from sqlalchemy import DateTime, Enum, ForeignKey, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-
 
 DIAS = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
 TIPOS = ("arte", "deporte", "tecnología", "social", "recreación", "otra")
- 
+
+TIPO_MIEMBRO = ("estudiante_pre", "estudiante_post", "funcionario", "academico")
+DEPTOS = (
+    "DCC",
+    "DIM",
+    "DFI",
+    "DIE",
+    "DII",
+    "Geologia",
+    "Astronomia",
+    "Ing. en Minas",
+    "Ing. Mecanica",
+    "Ing. Civil",
+)
 
 
 class Base(DeclarativeBase):
@@ -31,6 +43,7 @@ class Comuna(Base):
     region: Mapped["Region"] = relationship(back_populates="comunas")
     miembros: Mapped[List["Miembro"]] = relationship(back_populates="comuna")
 
+
 class Miembro(Base):
     __tablename__ = "miembro"
 
@@ -38,8 +51,12 @@ class Miembro(Base):
     nombre: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str] = mapped_column(String(80), nullable=False)
     telefono: Mapped[str] = mapped_column(String(15), nullable=False)
-    fecha_registro: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    fecha_registro: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.now)
     comuna_id: Mapped[int] = mapped_column(ForeignKey("comuna.id"), nullable=False)
+    tipo: Mapped[str] = mapped_column(Enum(*TIPO_MIEMBRO), nullable=False)
+    departamento: Mapped[str] = mapped_column(Enum(*DEPTOS), nullable=True)
+
+
 
     comuna: Mapped["Comuna"] = relationship(back_populates="miembros")
     actividades: Mapped[List["Actividad"]] = relationship(back_populates="miembro")
