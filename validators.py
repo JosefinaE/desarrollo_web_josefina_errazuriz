@@ -10,9 +10,11 @@ def validar_miembro(data, id_comunas):
     tipo = data.get("tipo")
     depto = data.get("depto")
     id_comuna = int(data.get("id_comuna"))
+    
+    fono = fono.replace(" ", "").replace("+","")
 
     valid_name = 3 <= len(nombre.strip()) < 200
-    valid_fono = 7 <= len(fono.strip()) <= 15
+    valid_fono = 7 <= len(fono) <= 15
 
     email_re = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
