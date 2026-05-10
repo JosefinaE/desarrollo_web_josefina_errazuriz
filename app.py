@@ -67,6 +67,7 @@ def registrar_miembro():
             session.add(new_miembro)
             session.commit()
             flash("Se ha registrado un nuevo miembro!", "info")
+            redirect(url_for('home'))
         except Exception as e:
             flash(f"Error al registrar miembro {e}", "error")
             session.rollback()
@@ -78,7 +79,7 @@ def registrar_actividad():
     return render_template("actividades.html")
 
 
-@app.route("/")
+@app.route("/listado_miembros")
 def listado_miembros():
     session = getSession()
     miembros = session.scalars(select(Miembro).order_by(Miembro.nombre)).all()

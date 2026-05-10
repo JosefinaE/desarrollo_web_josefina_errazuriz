@@ -1,66 +1,129 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Listado de miembros</title>
-    <link rel="stylesheet" href="./css/styles.css">
-</head>
-
-<div class="main">
-
-<header>
-    <h3>Indice</h3>
-    <nav>
-        <a href="registro.html">Registrar miembro</a>
-        <a href="actividades.html">Registrar actividad</a>
-        <a href="miembros.html">Ver miembros</a>
-        <a href="estadisticas.html">Estadísticas</a>
-    </nav>
-</header>
-
-<hr>
-<br>
-
-<!-- Javascript rellena este div dinamicamente-->
-<div id="errors" class="error-container"></div>
+{% extends "base.html" %}
+{% block content %}
 
     <h1>Listado de miembros</h1>
     <p>Puede usar los filtros y botones de navegación para explorar los datos:</p>
-
     <div class="form-row">
-        <label for="filtro-tipo">Filtrar por tipo:</label>
-        <select id="filtro-tipo">
+        <label for="tipo">Filtrar por tipo:</label>
+        <select id="tipo" onchange="actualizar(0, true)">
             <option value="">Todos</option>
             <option value="estudiante_pre">Pre-grado</option>
             <option value="estudiante_post">Post-grado</option>
             <option value="funcionario">Funcionario</option>
-            <option value="academico">Académico</option>
+            <option value="academico">Academico</option>
         </select>
     </div>
-
+ 
     <div class="form-row">
         <label for="orden">Ordenar por:</label>
-        <select id="orden">
+        <select id="orden" onchange="actualizar(0, true)">
             <option value="nombre">Nombre</option>
             <option value="email">Email</option>
-            <option value="fono">Telefono</option>
+            <option value="fono">Teléfono</option>
         </select>
     </div>
-
+ 
+    <div class="form-row">
+        <label for="cantidad">Cantidad por pagina:</label>
+        <select id="cantidad" onchange="actualizar(0, true)">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+        </select>
+    </div>
+ 
     <h2>Listado: </h2>
-    
-    <ul id="lista-miembros">
+    <ul id="lista_miembros">
         {% for m in miembros %}
-        <li>{{m.nombre}} — {{m.email}} ({{map_tipo_miembro[m.tipo]}}{{" " + m.departamento if m.departamento else "" }})</li>
+        {# datos en data-x para luego ordenar y filtrar #}
+        <li 
+            data-nombre="{{ m.nombre }}"
+            data-email="{{ m.email }}"
+            data-fono="{{ m.fono | default('') }}"
+            data-tipo="{{ m.tipo }}"
+            data-departamento="{{ m.departamento | default('') }}"
+        >   
+            {# Tal y como lo mostré en la T1 : #}
+            {{ m.nombre }} - 
+            ({{ map_tipo_miembro[m.tipo] }}{{ " " + m.departamento if m.departamento else "" }}) -
+            {{ m.telefono }} - {{ m.email }} - 
+            {{ m.comuna.region.nombre }}
+        </li>
         {% endfor %}
     </ul>
-
-    <button id="prev">Anterior</button>
-    <span id="pagina"></span>
-    <button id="next">Siguiente</button>
-
+ 
+    <div class="botones_pag">
+        <button id="prev" onclick="actualizar(-1, false)">Anterior</button>
+        <span id="pagina"></span>
+        <button id="next" onclick="actualizar(+1, false)">Siguiente</button>
+    </div>
 </div>
+ 
+<script>
+  const ul        = document.getElementById('lista_miembros');
+  const allItems  = Array.from(ul.children);
+ 
+  const selectTipo    = document.getElementById('tipo');
+  const selectOrden   = document.getElementById('orden');
+  const selectCantidad  = document.getElementById('cantidad');
+  const btnPrev    = document.getElementById('prev');
+  const btnNext    = document.getElementById('next');
+  const spanPagina = document.getElementById('pagina');
 
-</html> 
+  let paginaActual = 1;  // global para pagina
+ 
+  function actualizar(delta, primera_pagina) {
+    if(delta!= 0){
+        paginaActual += delta;
+    }
+    if(primera_pagina){
+        paginaActual = 1;
+    }
+    const tipo    = selectTipo.value;
+    const orden   = selectOrden.value;
+    const cantidad  = parseInt(selectCantidad.value, 10);
+ 
+    // filtro por tipo
+    let visible = allItems.filter(li =>
+      tipo == '' || li.dataset.tipo == tipo
+    );
+ 
+    // ordenar alfabeticamente
+    visible.sort((a, b) => {
+      const stringA = (a.dataset[orden] || '').toLowerCase();
+      const stringB = (b.dataset[orden] || '').toLowerCase();
+      return stringA.localeCompare(stringB); 
+    });
+ 
+    // minimo una pagina, si no las filtradas//cantidad (ej 110 elementos, a 20 por pagina -> 6 paginas )
+    const totalPags = Math.max(1, Math.ceil(visible.length / cantidad));
+    if (paginaActual > totalPags) paginaActual = totalPags;
+ 
+    // obtenemos los que están en la pagina actual
+    const inicio = (paginaActual - 1) * cantidad;
+    const fin    = inicio + cantidad;
+    const enPaginaActual  = visible.slice(inicio, fin); // esto es similar a lista[inicio:fin] en python
+ 
+    // ocultamos todo
+    allItems.forEach(li => {
+      li.style.display = 'none';
+      ul.appendChild(li);           
+    });
+    
+    // mostramos en esta pagina
+    enPaginaActual.forEach(li => {
+      li.style.display = '';
+      ul.appendChild(li);          
+    });
+ 
+    // desactivar botones de paginación si corresponde
+    btnPrev.disabled = paginaActual == 1;
+    btnNext.disabled = paginaActual == totalPags;
+  }
+ 
+</script>
 
+
+
+{% endblock %}
