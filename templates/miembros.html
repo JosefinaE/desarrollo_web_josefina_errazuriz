@@ -51,9 +51,9 @@
     <h2>Listado: </h2>
     
     <ul id="lista-miembros">
-        <li>Ana Pérez — ana@mail.com (Pre-grado)</li>
-        <li>Luis Soto — luis@mail.com (Académico)</li>
-        <li>María Rojas — maria@mail.com (Funcionario)</li>
+        {% for m in miembros %}
+        <li>{{m.nombre}} — {{m.email}} ({{map_tipo_miembro[m.tipo]}}{{" " + m.departamento if m.departamento else "" }})</li>
+        {% endfor %}
     </ul>
 
     <button id="prev">Anterior</button>

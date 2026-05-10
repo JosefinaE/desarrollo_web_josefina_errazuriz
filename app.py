@@ -8,6 +8,13 @@ from validators import validar_miembro
 app = Flask(__name__, template_folder="./templates", static_folder="./static")
 app.config["SECRET_KEY"] = "ñkdalksdo0akoriqworkdaslmlkadpñ"
 
+map_tipo_miembro = {
+    "estudiante_pre": "Estudiante Pregrado",
+    "estudiante_post": "Estudiante Postgrado",
+    "funcionario": "Funcionario",
+    "academico": "Academico",
+}
+
 
 def getSession():
     connection_string = "mysql+pymysql://cc5002:programacionweb@localhost:3306/tarea2"
@@ -21,7 +28,7 @@ def home():
     last_5_miembros = session.scalars(
         select(Miembro).order_by(Miembro.fecha_registro.desc()).limit(5)
     )
-    return render_template("index.html", miembros=last_5_miembros)
+    return render_template("index.html", miembros=last_5_miembros, map_tipo_miembro=map_tipo_miembro)
 
 
 @app.route("/register", methods=["POST", "GET"])
@@ -73,7 +80,10 @@ def registrar_actividad():
 
 @app.route("/")
 def listado_miembros():
-    return render_template("miembros.html")
+    session = getSession()
+    miembros = session.scalars(select(Miembro).order_by(Miembro.nombre)).all()
+
+    return render_template("miembros.html", miembros=miembros,map_tipo_miembro=map_tipo_miembro)
 
 
 @app.route("/")
