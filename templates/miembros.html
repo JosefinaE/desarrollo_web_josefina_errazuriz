@@ -47,8 +47,8 @@
             {# Tal y como lo mostré en la T1 : #}
             {{ m.nombre }} - 
             ({{ map_tipo_miembro[m.tipo] }}{{ " " + m.departamento if m.departamento else "" }}) -
-            {{ m.telefono }} - {{ m.email }} - 
-            {{ m.comuna.region.nombre }}
+            +{{ m.telefono }} - {{ m.email }} - 
+            {{ m.comuna.nombre }}, {{ m.comuna.region.nombre }} 
         </li>
         {% endfor %}
     </ul>
@@ -121,7 +121,12 @@
     btnPrev.disabled = paginaActual == 1;
     btnNext.disabled = paginaActual == totalPags;
   }
- 
+  document.addEventListener("DOMContentLoaded", () => {
+    selectTipo.value='';
+    selectOrden.value='nombre';
+    selectCantidad.value=10;
+    actualizar(0, true);// primer render
+    });
 </script>
 
 
