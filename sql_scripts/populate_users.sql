@@ -1,0 +1,20 @@
+INSERT INTO miembro (nombre, email, telefono, fecha_registro, comuna_id, tipo, departamento) VALUES
+('Alejandro Turing', 'alejandro.turing@mail.com', '912350001', NOW(), 130208, 'academico', 'DCC'),
+('Max Palanca', 'max.palanca@mail.com', '912350002', NOW(), 130207, 'estudiante_pre', 'DIM'),
+('Alberto Einstenio', 'alberto.einstenio@mail.com', '912350003', NOW(), 130214, 'academico', 'DFI'),
+('Jaime Maximiliano Wellington', 'max.wellington@mail.com', '912350004', NOW(), 130204, 'funcionario', NULL),
+('Leonardo Eustaquio Lerin', 'eu.lerin1@mail.com', '912350005', NOW(), 130210, 'estudiante_post', 'DIE'),
+('Carlos Gaussiano', 'cgauss@mail.com', '912350006', NOW(), 130212, 'academico', 'DIM'),
+('Samuel Armando Riman', 'smando.riman@mail.com', '912350007', NOW(), 130302, 'estudiante_post', 'DFI'),
+('Linus Toro Valdés', 'linus.torovald@mail.com', '912350008', NOW(), 130401, 'academico', 'DCC'),
+('Don Aldo Knuth', 'aldo.knuth@mail.com', '912350009', NOW(), 130208, 'academico', 'DCC'),
+('Pedro Esecuele', 'p.esecuele@mail.com', '912350010', NOW(), 130207, 'funcionario', NULL),
+
+('Carlos Masmás', 'Cmasmas23@mail.com', '912350011', NOW(), 130214, 'estudiante_pre', 'Ing. Civil'),
+('Diego Escala', 'diego.escala@mail.com', '912350012', NOW(), 130204, 'estudiante_post', 'DII'),
+('Roberto Golangño', 'roberto.golangno@mail.com', '912350013', NOW(), 130210, 'academico', 'DCC'),
+('Java the Hutt', 'java.th@mail.com', '912350014', NOW(), 130212, 'funcionario', NULL),
+('Mateo Labrador', 'mat.labrador@mail.com', '912350015', NOW(), 130302, 'estudiante_pre', 'Geologia'),
+('Don Segismundo Cobol', 'segismundo.cobol@mail.com', '912350016', NOW(), 130401, 'academico', 'DII'),
+('Montgomery Paiton', 'monty.py@mail.com', '912350017', NOW(), 130208, 'academico', 'DCC'),
+('Brian', 'brian@mail.com', '912350018', NOW(), 130207, 'funcionario', NULL);
