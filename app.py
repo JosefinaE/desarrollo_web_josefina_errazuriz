@@ -207,7 +207,6 @@ def show_photo():
 
 
 if __name__ == "__main__":
-    # Run the app in debug mode for easier development
     upload_dir = os.path.join(app.root_path, CARPETA_FOTOS)
     os.makedirs(upload_dir, exist_ok=True)
-    app.run(debug=True)
+    app.run()
