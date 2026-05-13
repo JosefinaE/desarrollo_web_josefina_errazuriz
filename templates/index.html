@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h3>Ultimos 5 miembros agregados: </h3>
+<h2>Ultimos 5 miembros agregados: </h2>
 <ul id="lista-miembros">
         {% for m in miembros %}
         <li>{{m.nombre}} — {{m.email}} ({{map_tipo_miembro[m.tipo]}}{{" " + m.departamento if m.departamento else "" }})</li>

@@ -2,7 +2,7 @@
 <html lang="es">
 
 <head>
-    <title>{{title}}</title>
+    <title>Herramienta Actividades</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
@@ -11,6 +11,7 @@
     <img
             class="icono-mostrar"
             src="{{ url_for('static', filename='img/logo.png') }}"
+            alt="mainlogo"
     >
     <h1>Indice Herramienta de Actividades UChile</h1>
 
@@ -19,30 +20,35 @@
           <img
             class="icono-mostrar"
             src="{{ url_for('static', filename='img/portada.png') }}"
+            alt="portada"
             >Portada
         </a><br>
         <a href="{{url_for('registrar_miembro')}}">
           <img
             class="icono-mostrar"
             src="{{ url_for('static', filename='img/agregar.png') }}"
+            alt="agregar"
             >Registrar miembro
         </a><br>
         <a href="{{url_for('listado_miembros')}}">
           <img
             class="icono-mostrar"
             src="{{ url_for('static', filename='img/listado.png') }}"
+            alt="miembros"
             >Ver miembros
         </a><br>
         <a href="{{url_for('registrar_actividad')}}">
           <img
             class="icono-mostrar"
             src="{{ url_for('static', filename='img/registrar.png') }}"
+            alt="registrar"
             >Registrar actividad
         </a><br>
         <a href="{{url_for('estadisticas')}}">
           <img
             class="icono-mostrar"
             src="{{ url_for('static', filename='img/graficos.png') }}"
+            alt="graficos"
             >Estadísticas
         </a><br>
     </nav>
