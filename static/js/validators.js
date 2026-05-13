@@ -36,8 +36,8 @@ function validateHoursArray(horas) {
 function validateFiles(files) {
     if (!files || files.length === 0) return false;
     for (let i = 0; i < files.length; i++) {
-        const type = file[i].type;
-        if (!type.startsWith("image/") && !type.startsWith("video/")) {
+        const type = files[i].type;
+        if (!type.startsWith("image/")) {
             return false;
         }
     }

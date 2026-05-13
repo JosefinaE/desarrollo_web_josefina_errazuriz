@@ -67,16 +67,20 @@ def registrar_miembro():
             session.add(new_miembro)
             session.commit()
             flash("Se ha registrado un nuevo miembro!", "info")
-            redirect(url_for('home'))
+            return redirect(url_for('home'))
         except Exception as e:
             flash(f"Error al registrar miembro {e}", "error")
             session.rollback()
     return render_template("registro.html", comunas=comunas)
 
 
-@app.route("/")
+@app.route("/registrar_actividad")
 def registrar_actividad():
-    return render_template("actividades.html")
+    session = getSession()
+    miembros = session.scalars(
+        select(Miembro).order_by(Miembro.fecha_registro.desc())
+    )
+    return render_template("actividades.html",miembros=miembros)
 
 
 @app.route("/listado_miembros")
@@ -87,7 +91,7 @@ def listado_miembros():
     return render_template("miembros.html", miembros=miembros,map_tipo_miembro=map_tipo_miembro)
 
 
-@app.route("/")
+@app.route("/estadisticas")
 def estadisticas():
     return render_template("estadisticas.html")
 

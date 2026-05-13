@@ -1,90 +1,99 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
+{% block content %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Registrar Actividad</title>
-    <link rel="stylesheet" href="./css/styles.css">
-</head>
 
-<div class="main">
+<h1>Registro de actividad</h1>
+<p>Por favor llenar el formulario a continuación con la información de la actividad:</p>
 
-<header>
-    <h3>Indice</h3>
-    <nav>
-        <a href="registro.html">Registrar miembro</a>
-        <a href="actividades.html">Registrar actividad</a>
-        <a href="miembros.html">Ver miembros</a>
-        <a href="estadisticas.html">Estadísticas</a>
-    </nav>
-</header>
 
-<hr>
-<br>
 
-<!-- Javascript rellena este div dinamicamente-->
-<div id="errors" class="error-container"></div>
 
-    <h1>Registro de actividad</h1>
-    <p>Por favor llenar el formulario a continuación con la información de la actividad:</p>
+<form method="POST"
+      action="{{ url_for('registrar_actividad') }}"
+      enctype="multipart/form-data"
+      id="form-actividad">
+    {# miembros #}
+    <div>
+        <label for="miembro_id">Miembro:</label>
+        <select name="miembro_id" id="miembro_id" required>
+            <option value="">Seleccione</option>
+            {% for m in miembros %}
+                <option value="{{ m.id }}">{{ m.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="dia">Día:</label>
+        <select name="dia" id="dia" required>
+            <option value="">Seleccione</option>
+            <option value="lunes">Lunes</option>
+            <option value="martes">Martes</option>
+            <option value="miércoles">Miércoles</option>
+            <option value="jueves">Jueves</option>
+            <option value="viernes">Viernes</option>
+            <option value="sábado">Sábado</option>
+            <option value="domingo">Domingo</option>
+        </select>
+    </div>
+    <div>
+        <label for="hora_inicio">Hora inicio (HH:MM):</label>
+        <input type="time" name="hora_inicio" id="hora_inicio" required>
+    </div>
+    <div>
+        <label for="duracion">Duración (HH:MM):</label>
+        <input type="time" name="duracion" id="duracion" required>
+    </div>
+    <div>
+        <label for="tipo">Tipo:</label>
+        <select name="tipo" id="tipo" required>
+            <option value="">Seleccione</option>
+            <option value="arte">Arte</option>
+            <option value="deporte">Deporte</option>
+            <option value="tecnología">Tecnología</option>
+            <option value="social">Social</option>
+            <option value="recreación">Recreación</option>
+            <option value="otra">Otra</option>
+        </select>
+    </div>
+    <div>
+        <label for="nombre">Nombre actividad:</label>
+        <input type="text"
+               name="nombre"
+               id="nombre"
+               maxlength="45"
+               required>
+    </div>
+    <div>
+        <label for="descripcion">Descripción:</label><br>
+        <textarea name="descripcion"
+                  id="descripcion"
+                  rows="5"
+                  cols="50"
+                  maxlength="500"></textarea>
+    </div>
+    <div>
+        <label for="archivos">Fotos:</label>
+        <input type="file"
+               name="archivos"
+               id="archivos"
+               multiple
+               accept="image/*">
+    </div>
+    <button type="submit">Registrar actividad</button>
 
-    <form id="form-actividad">
-        <!-- Los datos como nombre y contacto se obtienen desde la info del miembro que ingresa
-         el formulario -->
-        <div class="form-row">
-            <b>Horas:</b>
-            <!-- usar text para que  no salgan esas flechas para aumentar y disminuir numero-->
-            <label for="horas-lunes" class="small-label">L:</label>
-            <input id="horas-lunes" type="text" class="small-input" placeholder="0">
-
-            <label for="horas-martes" class="small-label">M:</label>
-            <input id="horas-martes" type="text" class="small-input"  placeholder="0">
-
-            <label for="horas-miercoles" class="small-label">Mi:</label>
-            <input id="horas-miercoles" type="text" class="small-input"  placeholder="0">
-
-            <label for="horas-jueves" class="small-label">J:</label>
-            <input id="horas-jueves" type="text" class="small-input"  placeholder="0">
-
-            <label for="horas-viernes" class="small-label">V:</label>
-            <input id="horas-viernes" type="text" class="small-input"  placeholder="0">
-
-            <label for="horas-sabado" class="small-label">S:</label>
-            <input id="horas-sabado" type="text" class="small-input"  placeholder="0">
-
-            <label for="horas-domingo" class="small-label">D:</label>
-            <input id="horas-domingo" type="text" class="small-input"  placeholder="0">
-        </div>
-        <div class="form-row">
-            <label for="archivos" class="form-label">Archivos:</label>
-            <input id="archivos" type="file" multiple accept="image/*,video/*">
-        </div>
-
-        <div class="form-row">
-            <label for="link" class="form-label">Link:</label>
-            <input id="link" type="url" placeholder="https://www.misitio.com">
-        </div>
-        
-        <button type="submit">Agregar</button>
-    </form>
-
-</div>
-
-<script src="./js/errors.js"></script>
-<script src="./js/validators.js"></script>
+</form>
+<script src="{{ url_for('static', filename='js/errors.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validators.js') }}"></script>
 <script>
     const form = document.getElementById("form-actividad");
-    const horas = [
-        document.getElementById("horas-lunes"),
-        document.getElementById("horas-martes"),
-        document.getElementById("horas-miercoles"),
-        document.getElementById("horas-jueves"),
-        document.getElementById("horas-viernes"),
-        document.getElementById("horas-sabado"),
-        document.getElementById("horas-domingo")
-    ];
     const archivos = document.getElementById("archivos");
-    const link = document.getElementById("link");
+    const miembroSelect = document.getElementById("miembro_id")
+    const diaSelect = document.getElementById("dia")
+    const horaInicioInput = document.getElementById("hora_inicio")
+    const duracionInput = document.getElementById("duracion")
+    const tipoSelect = document.getElementById("tipo")
+    const nombreInput = document.getElementById("nombre")
+    const descripcionInput = document.getElementById("descripcion")
 
     const errorDiv = document.getElementById("errors")
 
@@ -92,21 +101,52 @@
         cleanErrors(errorDiv)
         event.preventDefault();
 
-        let validHours = validateHoursArray(horas.map(x=>x.value))
         let validFiles = validateFiles(archivos.files) // filelist
-        let validLink = validateURL(link.value)
         
+        let validMiembro = miembroSelect.value.trim() !== "";        
+        let validDia = diaSelect.value.trim() !== "";   
+        let validTipo = tipoSelect.value.trim() !== "";
 
-        if(validHours && validFiles && validLink){
-            alert("Actividad registrada correctamente")
-            form.reset();
+        let nombre = nombreInput.value.trim();
+        let validNombre = nombre.length >= 3 && nombre.length<=45;
+
+        let descripcion = descripcionInput.value.trim();
+        let validDescripcion = descripcion.length <= 500;
+
+        // Source - https://stackoverflow.com/a/76736381
+        // Posted by Stairss
+        // Retrieved 2026-05-12, License - CC BY-SA 4.0
+        const HOURS_REGEX = /^(?:[01]\d|2[0-3]):[0-5]\d$/; // regex para 00:00 a 23:59
+        let validInicio = HOURS_REGEX.test(horaInicioInput.value.trim())
+         // por ahora no valido que inicio + duracion < 24 horas
+        let validDuracion = HOURS_REGEX.test(duracionInput.value.trim()) && duracionInput.value.trim() != "00:00"
+
+
+        let validForm =
+            validFiles &&
+            validMiembro &&
+            validDia &&
+            validTipo &&
+            validNombre &&
+            validDescripcion &&
+            validInicio &&
+            validDuracion;
+
+        if(validForm){
+            form.submit();
         }else{
             let head = "Errores en el formulario:"
 
-            let values =[
-                [validHours, "Ingreso de horas invalidos, verifique que sean numeros en el rango 0-24"],
-                [validFiles, "Archivo invalido"],
-                [validLink, "Link invalido"]]
+            let values = [
+                [validMiembro, "Debe seleccionar un miembro"],
+                [validDia, "Debe seleccionar un día"],
+                [validInicio, "Hora de inicio inválida, formato HH:MM"],
+                [validDuracion, "Duración inválida HH:MM"],
+                [validTipo, "Debe seleccionar un tipo"],
+                [validNombre, "Nombre inválido (3 a 45 caracteres)"],
+                [validDescripcion, "Descripción inválida (máximo 500 caracteres)"],
+                [validFiles, "No se ha adjuntado un archivo, o hay archivos invalidos"]
+            ];
             // filter out valid inputs
             console.log(values)
             let filtered_values = values.filter(val => val[0]==false).map(val=>val[1])
@@ -118,3 +158,5 @@
 
 </html> 
 
+
+{% endblock %}
