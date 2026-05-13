@@ -8,12 +8,37 @@
 
 
 <header>
-    <h1>Indice</h1>
+    <img
+            class="icono-mostrar"
+            src="{{ url_for('static', filename='img/logo.png') }}"
+    >
+    <h1>Indice Herramienta de Actividades UChile</h1>
+
     <nav>
-        <a href="{{url_for('registrar_miembro')}}">Registrar miembro</a>
-        <a href="{{url_for('listado_miembros')}}">Ver miembros</a>
-        <a href="{{url_for('registrar_actividad')}}">Registrar actividad</a>
-        <a href="{{url_for('estadisticas')}}">Estadísticas</a>
+        <a href="{{url_for('registrar_miembro')}}">Registrar miembro
+          <img
+            class="icono-mostrar"
+            src="{{ url_for('static', filename='img/agregar.png') }}"
+            >
+        </a><br>
+        <a href="{{url_for('listado_miembros')}}">Ver miembros
+          <img
+            class="icono-mostrar"
+            src="{{ url_for('static', filename='img/listado.png') }}"
+            >
+        </a><br>
+        <a href="{{url_for('registrar_actividad')}}">Registrar actividad
+          <img
+            class="icono-mostrar"
+            src="{{ url_for('static', filename='img/registrar.png') }}"
+            >
+        </a><br>
+        <a href="{{url_for('estadisticas')}}">Estadísticas
+          <img
+            class="icono-mostrar"
+            src="{{ url_for('static', filename='img/graficos.png') }}"
+            >
+        </a><br>
     </nav>
 </header>
 
