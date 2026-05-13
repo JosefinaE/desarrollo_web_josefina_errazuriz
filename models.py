@@ -80,10 +80,6 @@ class Actividad(Base):
         back_populates="actividad", cascade="all, delete-orphan"
     )
 
-    def __repr__(self) -> str:
-        return f"<Actividad {self.nombre} ({self.dia})>"
-
-
 class Foto(Base):
     __tablename__ = "foto"
 
