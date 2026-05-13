@@ -15,29 +15,35 @@
     <h1>Indice Herramienta de Actividades UChile</h1>
 
     <nav>
-        <a href="{{url_for('registrar_miembro')}}">Registrar miembro
+      <a href="{{url_for('home')}}">
+          <img
+            class="icono-mostrar"
+            src="{{ url_for('static', filename='img/portada.png') }}"
+            >Portada
+        </a><br>
+        <a href="{{url_for('registrar_miembro')}}">
           <img
             class="icono-mostrar"
             src="{{ url_for('static', filename='img/agregar.png') }}"
-            >
+            >Registrar miembro
         </a><br>
-        <a href="{{url_for('listado_miembros')}}">Ver miembros
+        <a href="{{url_for('listado_miembros')}}">
           <img
             class="icono-mostrar"
             src="{{ url_for('static', filename='img/listado.png') }}"
-            >
+            >Ver miembros
         </a><br>
-        <a href="{{url_for('registrar_actividad')}}">Registrar actividad
+        <a href="{{url_for('registrar_actividad')}}">
           <img
             class="icono-mostrar"
             src="{{ url_for('static', filename='img/registrar.png') }}"
-            >
+            >Registrar actividad
         </a><br>
-        <a href="{{url_for('estadisticas')}}">Estadísticas
+        <a href="{{url_for('estadisticas')}}">
           <img
             class="icono-mostrar"
             src="{{ url_for('static', filename='img/graficos.png') }}"
-            >
+            >Estadísticas
         </a><br>
     </nav>
 </header>
