@@ -172,7 +172,9 @@ def listado_miembros():
 
 @app.route("/estadisticas")
 def estadisticas():
-    return render_template("estadisticas.html")
+    grafo1 = url_for('static',filename='img/gatoingeniero.jpg') # cambiar por url a imagen de verdad
+    grafo2 = url_for('static',filename='img/grafo2.png') # cambiar por url a imagen de verdad
+    return render_template("estadisticas.html", grafo1=grafo1, grafo2=grafo2)
 
 
 @app.route("/show_photo")
