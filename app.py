@@ -1,7 +1,15 @@
 import os
 import uuid
 
-from flask import Flask, flash, redirect, render_template, request, url_for
+from flask import (
+    Flask,
+    flash,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
+)
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 from werkzeug.utils import secure_filename
@@ -20,6 +28,7 @@ map_tipo_miembro = {
 }
 
 CARPETA_FOTOS = "images"
+
 
 def getSession():
     connection_string = "mysql+pymysql://cc5002:programacionweb@localhost:3306/tarea2"
@@ -114,7 +123,7 @@ def registrar_actividad():
 
             session.add(act)
             session.flush()  # 'simula' agregar, sin commit
-            
+
             for archivo in archivos:
                 if archivo.filename == "":
                     continue
@@ -123,14 +132,20 @@ def registrar_actividad():
                 extension = os.path.splitext(nombre_seguro)[1].lower()
 
                 nombre_final = f"{uuid.uuid4().hex}{extension}"  # renombrar a uuid
-                
+
                 upload_dir = os.path.join(app.root_path, CARPETA_FOTOS)
                 ruta_archivo = os.path.join(upload_dir, nombre_final)
                 archivo.save(ruta_archivo)
                 archivos_guardados.append(ruta_archivo)
 
-                ruta_relativa = os.path.join(CARPETA_FOTOS, nombre_final) # relativo a root de proyecto
-                nueva_foto = Foto(actividad_id=act.id, ruta_archivo=ruta_relativa, nombre_archivo=nombre_seguro)
+                ruta_relativa = os.path.join(
+                    CARPETA_FOTOS, nombre_final
+                )  # relativo a root de proyecto
+                nueva_foto = Foto(
+                    actividad_id=act.id,
+                    ruta_archivo=ruta_relativa,
+                    nombre_archivo=nombre_seguro,
+                )
                 session.add(nueva_foto)
 
             session.commit()
@@ -160,8 +175,37 @@ def estadisticas():
     return render_template("estadisticas.html")
 
 
+@app.route("/show_photo")
+def show_photo():
+    ruta = request.args.get("ruta", "").strip()
+
+    if not ruta:
+        flash("foto no especificada", "error")
+        return redirect(url_for("home"))
+
+    session = getSession()
+    foto = session.scalar(select(Foto).where(Foto.ruta_archivo == ruta))
+    if not foto:
+        flash("La foto no existe en la base de datos.", "error")
+        return redirect(url_for("home"))
+
+
+    ruta_os = os.path.join(app.root_path, foto.ruta_archivo)
+    nombre_archivo = os.path.basename(foto.ruta_archivo)
+    carpeta = os.path.dirname(ruta_os)
+
+    if not os.path.isfile(ruta_os):
+        flash(f"Foto {ruta} no existe.", "error")
+        return redirect(url_for("home"))
+
+    return send_from_directory(
+        carpeta,
+        nombre_archivo
+    )
+
+
 if __name__ == "__main__":
     # Run the app in debug mode for easier development
     upload_dir = os.path.join(app.root_path, CARPETA_FOTOS)
-    os.makedirs(upload_dir, exist_ok=True) 
+    os.makedirs(upload_dir, exist_ok=True)
     app.run(debug=True)

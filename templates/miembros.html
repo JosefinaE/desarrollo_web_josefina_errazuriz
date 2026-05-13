@@ -46,7 +46,9 @@
             data-departamento="{{ m.departamento | default('') }}"
         >   
             {# Tal y como lo mostré en la T1 : #}
-                <div class="data-miembro" onclick="toggleActividad(this)">
+                <div class="data-miembro" 
+                {% if m.actividades %}onclick="toggleActividad(this)"{% endif %}
+                >
                     {{ m.nombre }} -
                     ({{ map_tipo_miembro[m.tipo] }}{{ " " + m.departamento if m.departamento else "" }}) -
                     +{{ m.telefono }} -
@@ -89,9 +91,10 @@
                             <td>{{ act.descripcion or "-" }}</td>
                             <td>
                                 {% for foto in act.fotos %}
-                                <a href="{{ url_for('show_photo', ruta=foto.ruta) }}"
+                                <a href="{{ url_for('show_photo', ruta=foto.ruta_archivo) }}"
                                     target="_blank"
                                     rel="noopener noreferrer">
+                                    {{ foto.nombre_archivo }}
                                 </a>
                                 {% endfor %}
                             </td>
