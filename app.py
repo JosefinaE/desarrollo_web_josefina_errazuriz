@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 from models import Actividad, Comuna, Foto, Miembro, Region
-from validators import validar_miembro
+from validators import validar_miembro, validar_actividad
 
 app = Flask(__name__, template_folder="./templates", static_folder="./static")
 app.config["SECRET_KEY"] = "ñkdalksdo0akoriqworkdaslmlkadpñ"
@@ -80,6 +80,21 @@ def registrar_actividad():
     miembros = session.scalars(
         select(Miembro).order_by(Miembro.fecha_registro.desc())
     )
+    if request.method == "POST":
+        data = request.form
+        id_miembros = [m.id for m in miembros]
+        valid_messages = validar_actividad(data, id_miembros)
+
+        ret = False
+        for valid, msg in valid_messages:
+            if not valid:
+                flash(msg, "error")
+                ret = True
+        if ret:
+            return redirect(url_for("registrar_miembro"))
+
+
+
     return render_template("actividades.html",miembros=miembros)
 
 
