@@ -4,13 +4,14 @@ import uuid
 from flask import (
     Flask,
     flash,
+    jsonify,
     redirect,
     render_template,
     request,
     send_from_directory,
     url_for,
 )
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, func
 from sqlalchemy.orm import Session
 from werkzeug.utils import secure_filename
 
@@ -172,8 +173,12 @@ def listado_miembros():
 
 @app.route("/estadisticas")
 def estadisticas():
-    grafo1 = url_for('static',filename='img/gatoingeniero.jpg') # cambiar por url a imagen de verdad
-    grafo2 = url_for('static',filename='img/grafo2.png') # cambiar por url a imagen de verdad
+    grafo1 = url_for(
+        "static", filename="img/gatoingeniero.jpg"
+    )  # cambiar por url a imagen de verdad
+    grafo2 = url_for(
+        "static", filename="img/grafo2.png"
+    )  # cambiar por url a imagen de verdad
     return render_template("estadisticas.html", grafo1=grafo1, grafo2=grafo2)
 
 
@@ -191,7 +196,6 @@ def show_photo():
         flash("La foto no existe en la base de datos.", "error")
         return redirect(url_for("home"))
 
-
     ruta_os = os.path.join(app.root_path, foto.ruta_archivo)
     nombre_archivo = os.path.basename(foto.ruta_archivo)
     carpeta = os.path.dirname(ruta_os)
@@ -200,12 +204,57 @@ def show_photo():
         flash(f"Foto {ruta} no existe.", "error")
         return redirect(url_for("home"))
 
-    return send_from_directory(
-        carpeta,
-        nombre_archivo
+    return send_from_directory(carpeta, nombre_archivo)
+
+
+# --------------------- API -----------------------
+@app.route("/api/actividades/tipos")
+def actividades_por_tipo():
+    session = getSession()
+    result = (
+        session.query(Actividad.tipo, func.count(Actividad.id))
+        .group_by(Actividad.tipo)
+        .all()
+    )
+    session.close()
+    data = [{"tipo": tipo, "total": total} for tipo, total in result]
+    return jsonify(data)
+
+
+@app.route("/api/miembros/por-dia")
+def miembros_por_dia_route():
+    session = getSession()
+    result = (
+        session.query(func.date(Miembro.fecha_registro), func.count(Miembro.id))
+        .group_by(func.date(Miembro.fecha_registro))
+        .order_by(func.date(Miembro.fecha_registro))
+        .all()
+    )
+    session.close()
+    result = [{"dia": str(dia), "total": total} for dia, total in result]
+    return jsonify(result)
+
+@app.route("/api/actividades/comunas")
+def actividades_comunas():
+    session = getSession()
+    result = (
+        session.query(
+            Miembro.comuna,
+            func.count(Actividad.id)
+        )
+        .select_from(Actividad)
+        .join(Miembro, Actividad.miembro_id == Miembro.id)
+        .group_by(Miembro.comuna)
+        .all()
     )
 
-
+    session.close()
+    result= [
+        {"comuna": comuna, "total": total}
+        for comuna, total in result
+    ]    
+    return jsonify(result)
+# _-------------------------------------------------
 if __name__ == "__main__":
     upload_dir = os.path.join(app.root_path, CARPETA_FOTOS)
     os.makedirs(upload_dir, exist_ok=True)
