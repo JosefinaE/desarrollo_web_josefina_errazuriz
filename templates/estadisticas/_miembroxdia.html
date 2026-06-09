@@ -1,0 +1,28 @@
+    <div id="miembros_por_dia"></div>
+
+<script>
+fetch("/api/miembros/por-dia")
+  .then(r => r.json())
+  .then(data => {
+    Highcharts.chart("miembros_por_dia", {
+      chart: {
+        type: "line",
+        width: 800,
+        height: 500
+      },
+      title: {
+        text: "Miembros registrados por día"
+      },
+      xAxis: {
+        categories: data.map(x => x.dia)
+      },
+      yAxis: {
+        title: { text: "Cantidad" }
+      },
+      series: [{
+        name: "Miembros",
+        data: data.map(x => x.total)
+      }]
+    });
+  });
+</script>

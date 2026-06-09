@@ -1,0 +1,26 @@
+<div id="pie_actividades"></div>
+
+
+<script>
+fetch("/api/actividades/tipos")
+  .then(r => r.json())
+  .then(data => {
+    Highcharts.chart("pie_actividades", {
+      chart: {
+        type: "pie",
+        width: 800,
+        height: 600
+      },
+      title: {
+        text: "Actividades por tipo"
+      },
+      series: [{
+        name: "Total",
+        data: data.map(x => ({
+          name: x.tipo,
+          y: x.total
+        }))
+      }]
+    });
+  });
+</script>

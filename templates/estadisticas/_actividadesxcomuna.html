@@ -1,0 +1,28 @@
+<div id="actividades_comuna"></div>
+
+<script>
+fetch("/api/actividades/comunas")
+  .then(r => r.json())
+  .then(data => {
+    Highcharts.chart("actividades_comuna", {
+      chart: {
+        type: "bar",
+        width: 600,
+        height: 300
+      },
+      title: {
+        text: "Actividades por comuna"
+      },
+      xAxis: {
+        categories: data.map(x => x.comuna)
+      },
+      yAxis: {
+        title: { text: "Total actividades" }
+      },
+      series: [{
+        name: "Actividades",
+        data: data.map(x => x.total)
+      }]
+    });
+  });
+</script>

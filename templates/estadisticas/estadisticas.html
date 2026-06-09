@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+
+
+    <h1>Graficos de miembros</h1>
+    <p>Aquí puede ver graficos con información de los miembros registrados y las actividades</p>
+
+    {% include 'estadisticas/_actividadesxcomuna.html' %}
+    {% include 'estadisticas/_actividadxtipo.html' %}
+    {% include 'estadisticas/_miembroxdia.html' %}
+
+
+
+
+{% endblock %}
