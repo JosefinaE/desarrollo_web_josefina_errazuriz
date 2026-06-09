@@ -179,7 +179,7 @@ def estadisticas():
     grafo2 = url_for(
         "static", filename="img/grafo2.png"
     )  # cambiar por url a imagen de verdad
-    return render_template("estadisticas.html", grafo1=grafo1, grafo2=grafo2)
+    return render_template("estadisticas/estadisticas.html", grafo1=grafo1, grafo2=grafo2)
 
 
 @app.route("/show_photo")
@@ -238,21 +238,23 @@ def miembros_por_dia_route():
 def actividades_comunas():
     session = getSession()
     result = (
-        session.query(
-            Miembro.comuna,
-            func.count(Actividad.id)
-        )
-        .select_from(Actividad)
-        .join(Miembro, Actividad.miembro_id == Miembro.id)
-        .group_by(Miembro.comuna)
-        .all()
+    session.query(
+        Comuna.nombre,
+        func.count(Actividad.id)
     )
+    .select_from(Actividad)
+    .join(Miembro)
+    .join(Miembro.comuna)
+    .group_by(Comuna.nombre)
+    .all()
+)
 
     session.close()
     result= [
         {"comuna": comuna, "total": total}
         for comuna, total in result
-    ]    
+    ]   
+    print(result) 
     return jsonify(result)
 # _-------------------------------------------------
 if __name__ == "__main__":
