@@ -56,12 +56,14 @@
                     {{ m.comuna.nombre }}, {{ m.comuna.region.nombre }}
                     {% if m.actividades %}
                     <br>
+                    <button>
                     Mostrar actividades:
                     <img
                         class="icono-mostrar"
                         src="{{ url_for('static', filename='img/ojo.png') }}"
                         alt="ojo.png"
                     >
+                    </button>
                     {% endif %}
                 </div>
 

@@ -167,7 +167,7 @@ def listado_miembros():
     miembros = session.scalars(select(Miembro).order_by(Miembro.nombre)).all()
 
     return render_template(
-        "miembros.html", miembros=miembros, map_tipo_miembro=map_tipo_miembro
+        "miembros/miembros.html", miembros=miembros, map_tipo_miembro=map_tipo_miembro
     )
 
 
