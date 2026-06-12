@@ -102,6 +102,10 @@
                                 {% endfor %}
                             </td>
                         </tr>
+                        <div id="comentarios-{{act.id}}">
+                            {% include "miembros/_list_comentarios.html" %}
+                            <button id="add-comentario"></button>
+                        </div>
                     {% endfor %}
                     </tbody>
                     </table>
