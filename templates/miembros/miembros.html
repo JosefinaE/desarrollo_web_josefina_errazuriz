@@ -64,7 +64,6 @@
         <div class="actividades-miembro" style="display:none;">
             <h3>Actividades:</h3>
             <hr>
-            {% for act in m.actividades %}
             <table class="tabla-actividades">
                 <thead>
                     <tr>
@@ -90,38 +89,41 @@
                             {% for foto in act.fotos %}
                             <a
                                 href="{{ url_for('show_photo', ruta=foto.ruta_archivo) }}"
-                                target="_blank"
-                                rel="noopener noreferrer">
+                                target="_blank" rel="noopener noreferrer">
                                 {{ foto.nombre_archivo }}
                             </a><br>
                             {% endfor %}
                         </td>
                     </tr>
-                    <div id="comentarios-{{act.id}}">
-                        <!-- tabla se refresca en evento refreshComentario -->
-                        <div id="comentarios-{{ act.id }}"
-                            hx-get="/comentarios/table/{{ act.id }}"
-                            hx-trigger="refreshComentarios-{{act.id}}"
-                            hx-swap="innerHTML">
 
-                            {% include "miembros/_list_comentarios.html" %}
-                        </div>
-                        <!-- al presionar el boton, se carga _form_comentarios.html -->
-                        <button id="add-comentario-{{act.id}}"
-                            hx-get="/comentarios/form_comentarios?actividad_id={{ act.id }}"
-                            hx-target="#comentario-form-container-{{act.id}}"
-                            hx-swap="innerHTML">
-                            Añadir comentario
-                        </button>
-                        <!-- AQui se carga el form de htmx -->
-                        <div id="comentario-form-container-{{ act.id }}"
-                            hx-on="closeForm: this.innerHTML = ''">
-                        </div>
-                    </div>
+                    <tr class="fila-comentarios">
+                        <td colspan="7">
+                            <div id="comentarios-{{ act.id }}">
+                                <!-- Esto permite que se recargue dinamicamente -->
+                                <div id="comentarios-lista-{{ act.id }}"
+                                    hx-get="/comentarios/table/{{ act.id }}"
+                                    hx-trigger="refreshComentarios-{{ act.id }} from:body"
+                                    hx-swap="innerHTML">
+                                    {% include "miembros/_list_comentarios.html"
+                                    %}
+                                </div>
+                                <!-- obtiene el form desde backend -->
+                                <button id="add-comentario-{{ act.id }}"
+                                    hx-get="/comentarios/form_comentarios?actividad_id={{ act.id }}"
+                                    hx-target="#comentario-form-container-{{ act.id }}"
+                                    hx-swap="innerHTML">
+                                    Añadir comentario
+                                </button>
+                                <!-- Aqui se rendereiza el form -->
+                                <div id="comentario-form-container-{{ act.id }}"
+                                    hx-on="closeForm: this.innerHTML = ''">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            {% endfor %}
         </div>
     </li>
     {% endfor %}
