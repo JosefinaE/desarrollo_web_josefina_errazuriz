@@ -37,3 +37,7 @@ Se puede modificar al comienzo de app.py
 ### Tarea 3
 - En templates/estadisticas se encuentran las templates con los graficos pedidos, estos usan highcharts.js
 - En app.py se definieron endpoints /api/... para que los graficos obtengan los datos. Cada punto va a buscar a la base de datos los resultados esperados.
+  
+- Para manejar la asincronia en los comentarios se usó el framework htmx https://htmx.org/
+- El flujo es que cuando se sube un comentario, se postea el form a la ruta especificada, si el contenido es valido el backend realiza un trigger que actualiza la tabla de comentarios sin recargar la pagina. Si el form es invalido el bakcend retorna un html con los errores del form, el cual se reemplaza en el div de errores ubicado en _form_comentarios.html.
+- !IMPORTANTE La validación de w3c falla para la sintaxis de htmx, sin embargo al probar la ruta el resto de elementos está bien definido.
