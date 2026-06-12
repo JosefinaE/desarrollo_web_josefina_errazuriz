@@ -1,4 +1,11 @@
-<form action="/comentarios/create" method="post">
+<form
+    hx-post="/comentarios/create"
+    hx-target="#comentario-form-errors-{{ actividad_id }}"
+    hx-swap="innerHTML"
+    hx-on="htmx:afterOnLoad: {
+  htmx.trigger('#comentarios-{{ actividad_id }}', 'refreshComentarios');
+  htmx.trigger('#comentario-form-container-{{ actividad_id }}', 'closeForm');
+}">
     <div>
         <label for="nombre">Nombre</label>
         <input id="nombre" name="nombre" type="text" maxlength="80" required />
@@ -12,3 +19,5 @@
     <input type="hidden" name="actividad_id" value="{{ actividad_id }}">
     <button type="submit">Enviar</button>
 </form>
+<!--aqui van errores-->
+<div id="comentario-form-errors-{{ actividad_id }}"></div>

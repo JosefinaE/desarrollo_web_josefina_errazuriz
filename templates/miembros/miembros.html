@@ -98,15 +98,25 @@
                         </td>
                     </tr>
                     <div id="comentarios-{{act.id}}">
-                        {% include "miembros/_list_comentarios.html" %}
+                        <!-- tabla se refresca en evento refreshComentario -->
+                        <div id="comentarios-{{ act.id }}"
+                            hx-get="/comentarios/table/{{ act.id }}"
+                            hx-trigger="refreshComentarios-{{act.id}}"
+                            hx-swap="innerHTML">
+
+                            {% include "miembros/_list_comentarios.html" %}
+                        </div>
+                        <!-- al presionar el boton, se carga _form_comentarios.html -->
                         <button id="add-comentario-{{act.id}}"
                             hx-get="/comentarios/form_comentarios?actividad_id={{ act.id }}"
                             hx-target="#comentario-form-container-{{act.id}}"
                             hx-swap="innerHTML">
                             Añadir comentario
                         </button>
-                        <!-- AQui se carga el partial de htmx -->
-                        <div id="comentario-form-container-{{act.id}}"></div>
+                        <!-- AQui se carga el form de htmx -->
+                        <div id="comentario-form-container-{{ act.id }}"
+                            hx-on="closeForm: this.innerHTML = ''">
+                        </div>
                     </div>
                     {% endfor %}
                 </tbody>

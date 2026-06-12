@@ -103,7 +103,7 @@ class Comentario(Base):
     nombre: Mapped[str] = mapped_column(String(80), nullable=False)
     texto: Mapped[str] = mapped_column(String(300), nullable=False)
     fecha: Mapped[object] = mapped_column(
-        TIMESTAMP, nullable=False, server_default=func.now()
+        TIMESTAMP, nullable=False, default=datetime.utcnow
     )
 
     actividad_id: Mapped[int] = mapped_column(

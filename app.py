@@ -11,11 +11,11 @@ from flask import (
     send_from_directory,
     url_for,
 )
-from sqlalchemy import create_engine, select, func
-from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, func, select
+from sqlalchemy.orm import Session, selectinload
 from werkzeug.utils import secure_filename
 
-from models import Actividad, Comuna, Foto, Miembro, Region
+from models import Actividad, Comentario, Comuna, Foto, Miembro, Region
 from validators import validar_actividad, validar_miembro
 
 app = Flask(__name__, template_folder="./templates", static_folder="./static")
@@ -256,6 +256,16 @@ def actividades_comunas():
 
 
 # -------------------------- COMENTARIOS
+@app.route("/comentarios/table/<int:actividad_id>")
+def comentarios_table(actividad_id):
+    session = getSession()
+    stmt = (
+        select(Actividad)
+        .where(Actividad.id == actividad_id)
+        .options(selectinload(Actividad.comentarios))
+    )
+    act = session.scalars(stmt).one_or_none()
+    return render_template("miembros/_comentarios_table.html", act=act)
 
 
 @app.route("/comentarios/form_comentarios", methods=["GET"])
@@ -266,10 +276,29 @@ def form_comentarios():
 
 @app.route("/comentarios/create", methods=["POST"])
 def create_comentario():
-    nombre = request.form["nombre"]
-    texto = request.form["texto"]
-    actividad_id = request.form["actividad_id"]
-    return "", 204
+    nombre = request.form.get("nombre")
+    texto = request.form.get("texto")
+    actividad_id = request.form.get("actividad_id")
+
+    errors = []
+    if not nombre:
+        errors.append("Nombre requerido")
+    if not texto:
+        errors.append("Texto requerido")
+
+    try:
+        comentario = Comentario(
+            nombre=nombre, texto=texto, actividad_id=int(actividad_id)
+        )
+
+        session = getSession()
+        session.add(comentario)
+        session.commit()
+    except Exception as e:
+        errors.append(str(e))
+    if errors:
+        return render_template("miembros/_comentario_error.html", errors=errors),200
+    return "", 200
 
 
 # _-------------------------------------------------

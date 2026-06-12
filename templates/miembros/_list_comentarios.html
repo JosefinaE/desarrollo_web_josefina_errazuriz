@@ -1,23 +1,23 @@
-{% if act.comentarios|length %}
-<table class="tabla-comentarios">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Texto</th>
-      <th>Fecha</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    {% for comentario in act.comentarios %}
+  {% if act.comentarios|length %}
+  <table class="tabla-comentarios">
+    <thead>
       <tr>
-        <td>{{ comentario.nombre }}</td>
-        <td>{{ comentario.texto }}</td>
-        <td>{{ comentario.fecha }}</td>
+        <th>Nombre</th>
+        <th>Texto</th>
+        <th>Fecha</th>
       </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>No hay comentarios para la actividad</p>
-{% endif %}
+    </thead>
+
+    <tbody>
+      {% for comentario in act.comentarios %}
+        <tr>
+          <td>{{ comentario.nombre }}</td>
+          <td>{{ comentario.texto }}</td>
+          <td>{{ comentario.fecha }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No hay comentarios para la actividad</p>
+  {% endif %}
