@@ -1,4 +1,4 @@
-<form action="/submit" method="post">
+<form action="/comentarios/create" method="post">
     <div>
         <label for="nombre">Nombre</label>
         <input id="nombre" name="nombre" type="text" maxlength="80" required />
@@ -8,6 +8,7 @@
         <label for="texto">Texto</label>
         <textarea id="texto" name="texto" maxlength="300" required></textarea>
     </div>
-
+    <!-- Cargado desde jinja:-->
+    <input type="hidden" name="actividad_id" value="{{ actividad_id }}">
     <button type="submit">Enviar</button>
 </form>

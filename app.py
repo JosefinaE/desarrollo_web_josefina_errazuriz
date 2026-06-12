@@ -255,6 +255,23 @@ def actividades_comunas():
     return jsonify(result)
 
 
+# -------------------------- COMENTARIOS
+
+
+@app.route("/comentarios/form_comentarios", methods=["GET"])
+def form_comentarios():
+    actividad_id = request.args.get("actividad_id")
+    return render_template("miembros/_form_comentarios.html", actividad_id=actividad_id)
+
+
+@app.route("/comentarios/create", methods=["POST"])
+def create_comentario():
+    nombre = request.form["nombre"]
+    texto = request.form["texto"]
+    actividad_id = request.form["actividad_id"]
+    return "", 204
+
+
 # _-------------------------------------------------
 if __name__ == "__main__":
     upload_dir = os.path.join(app.root_path, CARPETA_FOTOS)

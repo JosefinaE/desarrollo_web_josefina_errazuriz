@@ -1,206 +1,206 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h1>Listado de miembros</h1>
-    <p>Puede usar los filtros y botones de navegación para explorar los datos:</p>
-    <div class="form-row">
-        <label for="tipo">Filtrar por tipo:</label>
-        <select id="tipo" onchange="actualizar(0, true)">
-            <option value="">Todos</option>
-            <option value="estudiante_pre">Pre-grado</option>
-            <option value="estudiante_post">Post-grado</option>
-            <option value="funcionario">Funcionario</option>
-            <option value="academico">Academico</option>
-        </select>
-    </div>
- 
-    <div class="form-row">
-        <label for="orden">Ordenar por:</label>
-        <select id="orden" onchange="actualizar(0, true)">
-            <option value="nombre">Nombre</option>
-            <option value="email">Email</option>
-            <option value="fono">Teléfono</option>
-        </select>
-    </div>
- 
-    <div class="form-row">
-        <label for="cantidad">Cantidad por pagina:</label>
-        <select id="cantidad" onchange="actualizar(0, true)">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-        </select>
-    </div>
- 
-    <h2>Listado: </h2>
-    <ul id="lista_miembros">
-        {% for m in miembros %}
-        {# datos en data-x para luego ordenar y filtrar #}
-        <li 
-            class="item-miembro"
-            data-nombre="{{ m.nombre }}"
-            data-email="{{ m.email }}"
-            data-fono="{{ m.fono | default('') }}"
-            data-tipo="{{ m.tipo }}"
-            data-departamento="{{ m.departamento | default('') }}"
-        >   
-            {# Tal y como lo mostré en la T1 : #}
-                <div class="data-miembro" 
-                {% if m.actividades %}onclick="toggleActividad(this)"{% endif %}
-                >
-                    {{ m.nombre }} -
-                    ({{ map_tipo_miembro[m.tipo] }}{{ " " + m.departamento if m.departamento else "" }}) -
-                    +{{ m.telefono }} -
-                    {{ m.email }} -
-                    {{ m.comuna.nombre }}, {{ m.comuna.region.nombre }}
-                    {% if m.actividades %}
-                    <br>
-                    <button>
-                    Mostrar actividades:
-                    <img
-                        class="icono-mostrar"
-                        src="{{ url_for('static', filename='img/ojo.png') }}"
-                        alt="ojo.png"
-                    >
-                    </button>
-                    {% endif %}
-                </div>
+<h1>Listado de miembros</h1>
+<p>Puede usar los filtros y botones de navegación para explorar los datos:</p>
+<div class="form-row">
+    <label for="tipo">Filtrar por tipo:</label>
+    <select id="tipo" onchange="actualizar(0, true)">
+        <option value>Todos</option>
+        <option value="estudiante_pre">Pre-grado</option>
+        <option value="estudiante_post">Post-grado</option>
+        <option value="funcionario">Funcionario</option>
+        <option value="academico">Academico</option>
+    </select>
+</div>
 
-                <div class="actividades-miembro" style="display:none;">
-                    <h3>Actividades:</h3>
-                    <hr>
+<div class="form-row">
+    <label for="orden">Ordenar por:</label>
+    <select id="orden" onchange="actualizar(0, true)">
+        <option value="nombre">Nombre</option>
+        <option value="email">Email</option>
+        <option value="fono">Teléfono</option>
+    </select>
+</div>
+
+<div class="form-row">
+    <label for="cantidad">Cantidad por pagina:</label>
+    <select id="cantidad" onchange="actualizar(0, true)">
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+    </select>
+</div>
+
+<h2>Listado: </h2>
+<ul id="lista_miembros">
+    {% for m in miembros %}
+    {# datos en data-x para luego ordenar y filtrar #}
+    <li class="item-miembro" data-nombre="{{ m.nombre }}"
+        data-email="{{ m.email }}"
+        data-fono="{{ m.fono | default('') }}" data-tipo="{{ m.tipo }}"
+        data-departamento="{{ m.departamento | default('') }}">
+        {# Tal y como lo mostré en la T1 : #}
+        <div class="data-miembro" {% if m.actividades
+            %}onclick="toggleActividad(this)" {% endif %}>
+            {{ m.nombre }} -
+            ({{ map_tipo_miembro[m.tipo] }}{{ " " + m.departamento if
+            m.departamento else "" }}) -
+            +{{ m.telefono }} -
+            {{ m.email }} -
+            {{ m.comuna.nombre }}, {{ m.comuna.region.nombre }}
+            {% if m.actividades %}
+            <br>
+            <button>
+                Mostrar actividades:
+                <img class="icono-mostrar"
+                    src="{{ url_for('static', filename='img/ojo.png') }}"
+                    alt="ojo.png">
+            </button>
+            {% endif %}
+        </div>
+
+        <div class="actividades-miembro" style="display:none;">
+            <h3>Actividades:</h3>
+            <hr>
+            {% for act in m.actividades %}
+            <table class="tabla-actividades">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Día</th>
+                        <th>Hora inicio</th>
+                        <th>Duración</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                        <th>Fotos</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {% for act in m.actividades %}
-                    <table class="tabla-actividades">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Día</th>
-                            <th>Hora inicio</th>
-                            <th>Duración</th>
-                            <th>Tipo</th>
-                            <th>Descripción</th>
-                            <th>Fotos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for act in m.actividades %}
-                        <tr>
-                            <td>{{ act.nombre }}</td>
-                            <td>{{ act.dia }}</td>
-                            <td>{{ act.hora_inicio }}</td>
-                            <td>{{ act.duracion }}</td>
-                            <td>{{ act.tipo }}</td>
-                            <td>{{ act.descripcion or "-" }}</td>
-                            <td>
-                                {% for foto in act.fotos %}
-                                <a href="{{ url_for('show_photo', ruta=foto.ruta_archivo) }}"
-                                    target="_blank"
-                                    rel="noopener noreferrer">
-                                    {{ foto.nombre_archivo }}
-                                </a><br>
-                                {% endfor %}
-                            </td>
-                        </tr>
-                        <div id="comentarios-{{act.id}}">
-                            {% include "miembros/_list_comentarios.html" %}
-                            <button id="add-comentario"></button>
-                        </div>
+                    <tr>
+                        <td>{{ act.nombre }}</td>
+                        <td>{{ act.dia }}</td>
+                        <td>{{ act.hora_inicio }}</td>
+                        <td>{{ act.duracion }}</td>
+                        <td>{{ act.tipo }}</td>
+                        <td>{{ act.descripcion or "-" }}</td>
+                        <td>
+                            {% for foto in act.fotos %}
+                            <a
+                                href="{{ url_for('show_photo', ruta=foto.ruta_archivo) }}"
+                                target="_blank"
+                                rel="noopener noreferrer">
+                                {{ foto.nombre_archivo }}
+                            </a><br>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <div id="comentarios-{{act.id}}">
+                        {% include "miembros/_list_comentarios.html" %}
+                        <button id="add-comentario-{{act.id}}"
+                            hx-get="/comentarios/form_comentarios?actividad_id={{ act.id }}"
+                            hx-target="#comentario-form-container-{{act.id}}"
+                            hx-swap="innerHTML">
+                            Añadir comentario
+                        </button>
+                        <!-- AQui se carga el partial de htmx -->
+                        <div id="comentario-form-container-{{act.id}}"></div>
+                    </div>
                     {% endfor %}
-                    </tbody>
-                    </table>
-                    {% endfor %}
-                </div>
-        </li>
-        {% endfor %}
-    </ul>
- 
-    <div class="botones_pag">
-        <button id="prev" onclick="actualizar(-1, false)">Anterior</button>
-        <span id="pagina"></span>
-        <button id="next" onclick="actualizar(+1, false)">Siguiente</button>
-    </div>
- 
+                </tbody>
+            </table>
+            {% endfor %}
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<div class="botones_pag">
+    <button id="prev" onclick="actualizar(-1, false)">Anterior</button>
+    <span id="pagina"></span>
+    <button id="next" onclick="actualizar(+1, false)">Siguiente</button>
+</div>
+
 <script>
-  const ul        = document.getElementById('lista_miembros');
-  const allItems  = Array.from(ul.children);
- 
-  const selectTipo    = document.getElementById('tipo');
-  const selectOrden   = document.getElementById('orden');
-  const selectCantidad  = document.getElementById('cantidad');
-  const btnPrev    = document.getElementById('prev');
-  const btnNext    = document.getElementById('next');
-  const spanPagina = document.getElementById('pagina');
+    const ul = document.getElementById('lista_miembros');
+    const allItems = Array.from(ul.children);
 
-  let paginaActual = 1;  // global para pagina
-    
-  function toggleActividad(item){
-    const actividades = item.nextElementSibling;
-    if (actividades.style.display === "none") {
-        actividades.style.display = "block";
-    } else {
-        actividades.style.display = "none";
+    const selectTipo = document.getElementById('tipo');
+    const selectOrden = document.getElementById('orden');
+    const selectCantidad = document.getElementById('cantidad');
+    const btnPrev = document.getElementById('prev');
+    const btnNext = document.getElementById('next');
+    const spanPagina = document.getElementById('pagina');
+
+    let paginaActual = 1;  // global para pagina
+
+    function toggleActividad(item) {
+        const actividades = item.nextElementSibling;
+        if (actividades.style.display === "none") {
+            actividades.style.display = "block";
+        } else {
+            actividades.style.display = "none";
+        }
     }
-  }
 
-  function actualizar(delta, primera_pagina) {
-    if(delta!= 0){
-        paginaActual += delta;
+    function actualizar(delta, primera_pagina) {
+        if (delta != 0) {
+            paginaActual += delta;
+        }
+        if (primera_pagina) {
+            paginaActual = 1;
+        }
+        const tipo = selectTipo.value;
+        const orden = selectOrden.value;
+        const cantidad = parseInt(selectCantidad.value, 10);
+
+        // filtro por tipo
+        let visible = allItems.filter(li =>
+            tipo == '' || li.dataset.tipo == tipo
+        );
+
+        // ordenar alfabeticamente
+        visible.sort((a, b) => {
+            const stringA = (a.dataset[orden] || '').toLowerCase();
+            const stringB = (b.dataset[orden] || '').toLowerCase();
+            return stringA.localeCompare(stringB);
+        });
+
+        // minimo una pagina, si no las filtradas//cantidad (ej 110 elementos, a 20 por pagina -> 6 paginas )
+        const totalPags = Math.max(1, Math.ceil(visible.length / cantidad));
+        if (paginaActual > totalPags) paginaActual = totalPags;
+
+        // obtenemos los que están en la pagina actual
+        const inicio = (paginaActual - 1) * cantidad;
+        const fin = inicio + cantidad;
+        const enPaginaActual = visible.slice(inicio, fin); // esto es similar a lista[inicio:fin] en python
+
+        // ocultamos todo
+        allItems.forEach(li => {
+            li.style.display = 'none';
+            ul.appendChild(li);
+        });
+
+        // mostramos en esta pagina
+        enPaginaActual.forEach(li => {
+            li.style.display = '';
+            ul.appendChild(li);
+        });
+
+        // desactivar botones de paginación si corresponde
+        btnPrev.disabled = paginaActual == 1;
+        btnNext.disabled = paginaActual == totalPags;
     }
-    if(primera_pagina){
-        paginaActual = 1;
-    }
-    const tipo    = selectTipo.value;
-    const orden   = selectOrden.value;
-    const cantidad  = parseInt(selectCantidad.value, 10);
- 
-    // filtro por tipo
-    let visible = allItems.filter(li =>
-      tipo == '' || li.dataset.tipo == tipo
-    );
- 
-    // ordenar alfabeticamente
-    visible.sort((a, b) => {
-      const stringA = (a.dataset[orden] || '').toLowerCase();
-      const stringB = (b.dataset[orden] || '').toLowerCase();
-      return stringA.localeCompare(stringB); 
-    });
- 
-    // minimo una pagina, si no las filtradas//cantidad (ej 110 elementos, a 20 por pagina -> 6 paginas )
-    const totalPags = Math.max(1, Math.ceil(visible.length / cantidad));
-    if (paginaActual > totalPags) paginaActual = totalPags;
- 
-    // obtenemos los que están en la pagina actual
-    const inicio = (paginaActual - 1) * cantidad;
-    const fin    = inicio + cantidad;
-    const enPaginaActual  = visible.slice(inicio, fin); // esto es similar a lista[inicio:fin] en python
- 
-    // ocultamos todo
-    allItems.forEach(li => {
-      li.style.display = 'none';
-      ul.appendChild(li);           
-    });
-    
-    // mostramos en esta pagina
-    enPaginaActual.forEach(li => {
-      li.style.display = '';
-      ul.appendChild(li);          
-    });
- 
-    // desactivar botones de paginación si corresponde
-    btnPrev.disabled = paginaActual == 1;
-    btnNext.disabled = paginaActual == totalPags;
-  }
-  document.addEventListener("DOMContentLoaded", () => {
-    selectTipo.value='';
-    selectOrden.value='nombre';
-    selectCantidad.value=10;
+    document.addEventListener("DOMContentLoaded", () => {
+        selectTipo.value = '';
+        selectOrden.value = 'nombre';
+        selectCantidad.value = 10;
 
 
-    actualizar(0, true);// primer render
+        actualizar(0, true);// primer render
     });
 </script>
-
-
 
 {% endblock %}
