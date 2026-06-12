@@ -277,14 +277,17 @@ def form_comentarios():
 
 @app.route("/comentarios/create", methods=["POST"])
 def create_comentario():
-    nombre = request.form.get("nombre")
-    texto = request.form.get("texto")
     actividad_id = request.form.get("actividad_id")
+    # sacar espacios blancos
+    nombre = request.form.get("nombre", "").strip()
+    texto = request.form.get("texto", "").strip()
+
     errors = []
-    if not nombre:
-        errors.append("Nombre requerido")
-    if not texto:
-        errors.append("Texto requerido")
+
+    if not (3 <= len(nombre) <= 80):
+        errors.append("Nombre inválido")
+    if not (5 <= len(texto) <= 300):
+        errors.append("Texto inválido")
     if not actividad_id:
         errors.append("Actividad inválida")
     if errors:

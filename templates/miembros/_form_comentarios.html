@@ -3,17 +3,25 @@
     hx-target="#comentario-form-errors-{{ actividad_id }}"
     hx-swap="innerHTML">
     <div>
-        <label for="nombre">Nombre</label>
-        <input id="nombre" name="nombre" type="text" maxlength="80" required />
+        <label>Nombre</label>
+        <input
+            name="nombre"
+            type="text"
+            required
+            minlength="3"
+            maxlength="80" />
     </div>
-
     <div>
-        <label for="texto">Texto</label>
-        <textarea id="texto" name="texto" maxlength="300" required></textarea>
+        <label>Texto</label>
+        <textarea
+            name="texto"
+            rows="4"
+            cols="50"
+            required
+            minlength="5"
+            maxlength="300"></textarea>
     </div>
-    <!-- Cargado desde jinja:-->
     <input type="hidden" name="actividad_id" value="{{ actividad_id }}">
     <button type="submit">Enviar</button>
 </form>
-<!--aqui van errores-->
 <div id="comentario-form-errors-{{ actividad_id }}"></div>
