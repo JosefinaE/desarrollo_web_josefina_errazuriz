@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from sqlalchemy import DateTime, Enum, ForeignKey, String, Text
+from sqlalchemy import TIMESTAMP, DateTime, Enum, ForeignKey, String, Text, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 DIAS = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
@@ -51,12 +51,12 @@ class Miembro(Base):
     nombre: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str] = mapped_column(String(80), nullable=False)
     telefono: Mapped[str] = mapped_column(String(15), nullable=False)
-    fecha_registro: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.now)
+    fecha_registro: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.now
+    )
     comuna_id: Mapped[int] = mapped_column(ForeignKey("comuna.id"), nullable=False)
     tipo: Mapped[str] = mapped_column(Enum(*TIPO_MIEMBRO), nullable=False)
     departamento: Mapped[str] = mapped_column(Enum(*DEPTOS), nullable=True)
-
-
 
     comuna: Mapped["Comuna"] = relationship(back_populates="miembros")
     actividades: Mapped[List["Actividad"]] = relationship(back_populates="miembro")
@@ -79,6 +79,10 @@ class Actividad(Base):
     fotos: Mapped[List["Foto"]] = relationship(
         back_populates="actividad", cascade="all, delete-orphan"
     )
+    comentarios: Mapped[List["Comentario"]] = relationship(
+        back_populates="actividad", cascade="all, delete-orphan"
+    )
+
 
 class Foto(Base):
     __tablename__ = "foto"
@@ -91,3 +95,20 @@ class Foto(Base):
     )
 
     actividad: Mapped["Actividad"] = relationship(back_populates="fotos")
+
+
+class Comentario(Base):
+    __tablename__ = "comentario"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    nombre: Mapped[str] = mapped_column(String(80), nullable=False)
+    texto: Mapped[str] = mapped_column(String(300), nullable=False)
+    fecha: Mapped[object] = mapped_column(
+        TIMESTAMP, nullable=False, server_default=func.now()
+    )
+
+    actividad_id: Mapped[int] = mapped_column(
+        ForeignKey("actividad.id", ondelete="NO ACTION", onupdate="NO ACTION"),
+        nullable=False,
+    )
+
+    actividad: Mapped["Actividad"] = relationship(back_populates="comentarios")
