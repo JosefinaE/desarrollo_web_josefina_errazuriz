@@ -99,10 +99,10 @@
                     <tr class="fila-comentarios">
                         <td colspan="7">
                             <div id="comentarios-{{ act.id }}">
-                                <!-- Esto permite que se recargue dinamicamente -->
+                                <!-- Esto permite que se recargue dinamicamente cuando se guarda un comentario-->
                                 <div id="comentarios-lista-{{ act.id }}"
                                     hx-get="/comentarios/table/{{ act.id }}"
-                                    hx-trigger="refreshComentarios-{{ act.id }} from:body"
+                                    hx-trigger="commentSaved-{{ act.id }} from:body"
                                     hx-swap="innerHTML">
                                     {% include "miembros/_list_comentarios.html"
                                     %}
@@ -114,9 +114,10 @@
                                     hx-swap="innerHTML">
                                     Añadir comentario
                                 </button>
-                                <!-- Aqui se rendereiza el form -->
-                                <div id="comentario-form-container-{{ act.id }}"
-                                    hx-on="closeForm: this.innerHTML = ''">
+                                <!-- Aqui se rendereiza el form, cuando se guarda un comentario se limpia -->
+                                <div
+                                    id="comentario-form-container-{{ act.id }}"
+                                    hx-on="comment-saved-{{ act.id }}: this.innerHTML = ''">
                                 </div>
                             </div>
                         </td>

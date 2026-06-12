@@ -1,4 +1,3 @@
-import json
 import os
 import uuid
 
@@ -258,7 +257,7 @@ def actividades_comunas():
 
 
 # -------------------------- COMENTARIOS
-@app.route("/comentarios/table/<int:actividad_id>")
+@app.route("/comentarios/table/<actividad_id>")
 def comentarios_table(actividad_id):
     session = getSession()
     stmt = (
@@ -267,7 +266,7 @@ def comentarios_table(actividad_id):
         .options(selectinload(Actividad.comentarios))
     )
     act = session.scalars(stmt).one_or_none()
-    return render_template("miembros/_comentarios_table.html", act=act)
+    return render_template("miembros/_list_comentarios.html", act=act)
 
 
 @app.route("/comentarios/form_comentarios", methods=["GET"])
@@ -302,9 +301,7 @@ def create_comentario():
 
     # trigger from here, not frontend
     response = make_response("", 200)
-    response.headers["HX-Trigger"] = json.dumps({
-        f"commentSaved-{actividad_id}": True
-    })
+    response.headers["HX-Trigger"] = f"commentSaved-{actividad_id}"
     return response
 # _-------------------------------------------------
 if __name__ == "__main__":
