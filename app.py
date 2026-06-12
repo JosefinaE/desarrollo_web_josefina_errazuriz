@@ -1,3 +1,4 @@
+import json
 import os
 import uuid
 
@@ -5,6 +6,7 @@ from flask import (
     Flask,
     flash,
     jsonify,
+    make_response,
     redirect,
     render_template,
     request,
@@ -279,28 +281,31 @@ def create_comentario():
     nombre = request.form.get("nombre")
     texto = request.form.get("texto")
     actividad_id = request.form.get("actividad_id")
-
     errors = []
     if not nombre:
         errors.append("Nombre requerido")
     if not texto:
         errors.append("Texto requerido")
-
+    if not actividad_id:
+        errors.append("Actividad inválida")
+    if errors:
+        return render_template("miembros/_comentario_error.html", errors=errors), 200
     try:
         comentario = Comentario(
             nombre=nombre, texto=texto, actividad_id=int(actividad_id)
         )
-
         session = getSession()
         session.add(comentario)
         session.commit()
     except Exception as e:
-        errors.append(str(e))
-    if errors:
-        return render_template("miembros/_comentario_error.html", errors=errors),200
-    return "", 200
+        return render_template("miembros/_comentario_error.html", errors=[str(e)]), 200
 
-
+    # trigger from here, not frontend
+    response = make_response("", 200)
+    response.headers["HX-Trigger"] = json.dumps({
+        f"commentSaved-{actividad_id}": True
+    })
+    return response
 # _-------------------------------------------------
 if __name__ == "__main__":
     upload_dir = os.path.join(app.root_path, CARPETA_FOTOS)
