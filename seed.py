@@ -7,6 +7,7 @@ SQL_FILES = [
     "sql_scripts/tarea2.sql",
     "sql_scripts/region-comuna.sql",
     "sql_scripts/tabla-comentario.sql",
+    "sql_scripts/tabla-nota.sql",
     "sql_scripts/seed_data/01_populate_users.sql",
     "sql_scripts/seed_data/02_populate_actividades.sql",
 ]
