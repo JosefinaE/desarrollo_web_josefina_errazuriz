@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Buscador de Actividades</title>
+    </head>
+    <body>
+
+        <h1>Buscador de Actividades</h1>
+
+        <form onsubmit="return false;">
+            <label for="q">Buscar:</label>
+            <input type="text" id="q"
+                placeholder="Escribe al menos 3 caracteres..."
+                autocomplete="off">
+        </form>
+
+        <div id="mensaje"></div>
+        <div id="resultados"></div>
+
+        <script>
+    const input = document.getElementById('q');
+    input.addEventListener('input', () => {
+        clearTimeout(timeout);
+        const q = input.value.trim();
+        if (q.length < 3) {
+            resultados.innerHTML = '';
+            mensaje.textContent = '';
+            return;
+        }
+        timeout = setTimeout(() => buscar(q), 300);
+    });
+    const resultados = document.getElementById('resultados');
+    const mensaje = document.getElementById('mensaje');
+    let timeout = null;
+
+    input.addEventListener('input', () => {
+        clearTimeout(timeout);
+        const q = input.value.trim();
+        if (q.length < 3) {
+            resultados.innerHTML = '';
+            mensaje.textContent = '';
+            return;
+        }
+        timeout = setTimeout(() => buscar(q), 300);
+    });
+
+    function buscar(q) {
+        fetch('/api/buscar?q=' + encodeURIComponent(q))
+            .then(r => r.json())
+            .then(data => render(data, q))
+            .catch(() => { mensaje.textContent = 'Error al buscar.'; });
+    }
+
+    function render(data, q) {
+        if (data.length === 0) {
+            mensaje.textContent = 'No se encontraron actividades.';
+            resultados.innerHTML = '';
+            return;
+        }
+        mensaje.textContent = '';
+        resultados.innerHTML = data.map(a => `
+            <div class="actividad" id="act-${a.id}">
+                <h3>${(a.nombre)}</h3>
+                <p><strong>Miembro:</strong> ${a.miembro}</p>
+<p><strong>Tipo:</strong> ${a.tipo}</p>
+                <p><strong>Día:</strong> ${a.dia}</p>
+                
+                <p><strong>Comuna:</strong> ${(a.comuna)}</p>
+                <p><strong>Descripción:</strong> ${(a.descripcion)}</p>
+                <p>
+                    <strong>Nota:</strong>
+                    <span id="nota-${a.id}">${(a.promedio === null || a.promedio === undefined) ? '-' : parseFloat(a.promedio).toFixed(1)}</span>
+                    &nbsp;
+                    <button onclick="toggleEval(${a.id})">Evaluar</button>
+                </p>
+                <div id="eval-${a.id}" class="eval-form" hidden>
+                    <select id="select-${a.id}">
+                        <option value="">-- elige nota --</option>
+                        ${[1,2,3,4,5,6,7].map(n => `<option value="${n}">${n}</option>`).join('')}
+                    </select>
+                    <button onclick="enviar(${a.id})">Confirmar</button>
+                </div>
+            </div>
+            <hr>
+        `).join('');
+    }
+
+    function toggleEval(id) {
+        const div = document.getElementById('eval-' + id);
+        div.hidden = !div.hidden;
+    }
+
+    function enviar(id) {
+        const valor = parseInt(document.getElementById('select-' + id).value, 10);
+        if (isNaN(valor) || valor < 1 || valor > 7) {
+            alert('Selecciona una nota entre 1 y 7');
+            return;
+        }
+        fetch('/api/nota', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ actividadId: id, valor: valor })
+        })
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('nota-' + id).textContent = parseFloat(data.promedio).toFixed(1);
+            document.getElementById('eval-' + id).hidden = true;
+        })
+        .catch(() => alert('Error al guardar la nota.'));
+    }
+</script>
+
+    </body>
+</html>
