@@ -19,21 +19,12 @@
         <div id="resultados"></div>
 
         <script>
+    
     const input = document.getElementById('q');
-    input.addEventListener('input', () => {
-        clearTimeout(timeout);
-        const q = input.value.trim();
-        if (q.length < 3) {
-            resultados.innerHTML = '';
-            mensaje.textContent = '';
-            return;
-        }
-        timeout = setTimeout(() => buscar(q), 300);
-    });
     const resultados = document.getElementById('resultados');
     const mensaje = document.getElementById('mensaje');
     let timeout = null;
-
+    // busca cuando usuario deja de escribir
     input.addEventListener('input', () => {
         clearTimeout(timeout);
         const q = input.value.trim();
@@ -44,7 +35,8 @@
         }
         timeout = setTimeout(() => buscar(q), 300);
     });
-
+    
+    // hace query a la API
     function buscar(q) {
         fetch('/api/buscar?q=' + encodeURIComponent(q))
             .then(r => r.json())
@@ -86,6 +78,7 @@
         `).join('');
     }
 
+    // funciones para mandar notas
     function toggleEval(id) {
         const div = document.getElementById('eval-' + id);
         div.hidden = !div.hidden;
