@@ -42,3 +42,9 @@ Se puede modificar al comienzo de app.py
 - El flujo es que cuando se sube un comentario, se postea el form a la ruta especificada, si el contenido es valido el backend realiza un trigger que actualiza la tabla de comentarios sin recargar la pagina. Si el form es invalido el bakcend retorna un html con los errores del form, el cual se reemplaza en el div de errores ubicado en _form_comentarios.html.
 - !IMPORTANTE La validación de w3c falla para la sintaxis de htmx, sin embargo al probar la ruta el resto de elementos está bien definido.
 - Entradas maliciosas son manejadas aprovechando los frameworks usados: (SQL Injection lo maneja SQLalchemy nativamente), (template injection se maneja usando los metodos adecuados de jinja2), (con el setup actual de htmx no hay inyecciones, ya que los swap solo reemplazan datos del servidor y los datos ingresados por el usuario siempre se renderizan con jinja2)
+
+### Tarea 4
+
+- Se usó patrón Controller - Service - Repository - Model
+- El codigo en Java solo agrega lo pedido en la tarea, todo lo anterior se mantiene en flask.
+- buscador.html implementa el buscador, cuando el usuario escribe se hace una query a /api/buscar y cuando se evalua una actividad se hace post a /api/nota, se recalcula el promedio y se visualiza de inmediato
